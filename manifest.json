@@ -1,11 +1,11 @@
 {
-  "name": "Treino — Diário pessoal",
-  "short_name": "Treino",
-  "description": "Diário pessoal de academia com histórico local e modo offline.",
+  "name": "MC PRIME — Treino e evolução",
+  "short_name": "MC PRIME",
+  "description": "Treine, registre seu progresso e chegue ao seu prime.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "background_color": "#0d0f13",
-  "theme_color": "#0d0f13",
+  "theme_color": "#111318",
   "icons": []
 }

@@ -79,3 +79,11 @@ Versão v6: exclusão de fichas personalizadas (A/B protegidas, histórico concl
 - Navegação inferior agora usa transições horizontais conforme a ordem das abas, com duração aproximada de 320 ms.
 - Ajustadas as animações de expansão dos exercícios para um movimento mais fluido.
 - Respeita `prefers-reduced-motion`.
+
+
+## v13 — Marca MC PRIME e splash screen
+- Atualizada a identidade visual para MC PRIME, com monograma geométrico em hexágono e verde-lima.
+- Adicionada splash screen CSS/SVG, sem imagens externas nem dependência de internet.
+- A apresentação completa aparece na primeira abertura neste navegador; nas próximas, a versão curta dura menos tempo.
+- Respeita `prefers-reduced-motion`; a tela de marca não bloqueia a gravação de dados.
+- Manifesto e cache atualizados para a identidade MC PRIME e `treino-pwa-v13`.

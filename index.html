@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#111318">
   <meta name="description" content="Seu diário de treino pessoal, com histórico local e suporte offline.">
   <link rel="manifest" href="./manifest.json">
-  <title>Treino — Diário pessoal</title>
+  <title>MC PRIME — Treino e evolução</title>
   <style>
     :root{color-scheme:dark;--bg:#0d0f13;--panel:#171a21;--panel2:#20242d;--line:#2c313d;--text:#f3f5f8;--muted:#a4adbd;--accent:#b7f36b;--danger:#ff7979}
     *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
@@ -152,12 +152,42 @@
     .toast-message.visible{opacity:1;transform:translate(-50%,0)}
     @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 
+
+    /* MC PRIME splash: geometric MC monogram in a hexagon */
+    .brand-mark{height:42px;width:42px;border-radius:13px;background:#171d15;border:1px solid #425333;display:grid;place-items:center;padding:0;overflow:hidden}
+    .brand-mark svg{width:34px;height:34px;display:block}
+    .brand-lockup h1{font-size:23px;letter-spacing:.4px;font-weight:900}
+    .brand-lockup p{font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+    .mc-wordmark{font-weight:900;letter-spacing:.06em}.mc-wordmark .prime-accent{color:var(--accent)}
+    .splash-screen{position:fixed;inset:0;z-index:5000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:15px;background:radial-gradient(ellipse at 50% 45%,#202a1a 0, #11140f 35%, #0d0f13 72%);opacity:1;visibility:visible;transition:opacity .34s ease,visibility .34s ease;overflow:hidden}
+    .splash-screen.is-leaving{opacity:0;visibility:hidden;pointer-events:none}
+    .splash-logo{width:124px;height:124px;filter:drop-shadow(0 0 22px #b8f36b18);animation:splashLogoIn .52s cubic-bezier(.18,.78,.22,1) both}
+    .splash-wordmark{font-size:30px;font-weight:900;letter-spacing:.11em;color:#f3f5f8;opacity:0;transform:translateY(7px);animation:splashWordIn .34s .2s ease-out forwards}
+    .splash-wordmark span{color:var(--accent)}
+    .splash-line{width:0;height:2px;border-radius:99px;background:var(--accent);box-shadow:0 0 15px #b8f36b80;animation:splashLineIn .32s .34s ease-out forwards}
+    .splash-screen.is-quick .splash-logo{animation-duration:.22s}
+    .splash-screen.is-quick .splash-wordmark{animation-delay:.04s;animation-duration:.18s}
+    .splash-screen.is-quick .splash-line{animation-delay:.06s;animation-duration:.18s}
+    @keyframes splashLogoIn{from{opacity:0;transform:scale(.72) rotate(-5deg)}to{opacity:1;transform:scale(1) rotate(0)}}
+    @keyframes splashWordIn{to{opacity:1;transform:translateY(0)}}
+    @keyframes splashLineIn{to{width:58px}}
+    @media(prefers-reduced-motion:reduce){.splash-logo,.splash-wordmark,.splash-line{animation:none!important;opacity:1!important;transform:none!important}.splash-line{width:58px!important}.splash-screen{transition:none!important}}
+
   </style>
 </head>
 <body>
+<div id="splashScreen" class="splash-screen" role="status" aria-label="MC PRIME">
+  <svg class="splash-logo" viewBox="0 0 180 180" role="img" aria-label="Símbolo MC PRIME">
+    <path d="M90 13 151 48v70l-61 35-61-35V48Z" fill="#11150f" stroke="#B8F36B" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M43 119V61l23 27 23-27v58" fill="none" stroke="#B8F36B" stroke-width="11" stroke-linejoin="round"/>
+    <path d="M137 66h-24c-8 0-12 5-12 13v22c0 9 4 13 12 13h24" fill="none" stroke="#B8F36B" stroke-width="11" stroke-linecap="square" stroke-linejoin="round"/>
+  </svg>
+  <div class="splash-wordmark">MC <span>PRIME</span></div>
+  <div class="splash-line" aria-hidden="true"></div>
+</div>
 <div class="wrap">
   <header class="app-header">
-    <div class="brand-lockup"><div class="brand-mark"><span></span><span></span><span></span></div><div><h1>Treino<span style="color:var(--accent)">.</span></h1><p>Seu espaço de evolução</p></div></div>
+    <div class="brand-lockup"><div class="brand-mark"><svg viewBox="0 0 180 180" aria-hidden="true"><path d="M90 13 151 48v70l-61 35-61-35V48Z" fill="#11150f" stroke="#B8F36B" stroke-width="8" stroke-linejoin="round"/><path d="M43 119V61l23 27 23-27v58" fill="none" stroke="#B8F36B" stroke-width="11" stroke-linejoin="round"/><path d="M137 66h-24c-8 0-12 5-12 13v22c0 9 4 13 12 13h24" fill="none" stroke="#B8F36B" stroke-width="11" stroke-linecap="square" stroke-linejoin="round"/></svg></div><div><h1 class="mc-wordmark">MC <span class="prime-accent">PRIME</span></h1><p>Seu espaço de evolução</p></div></div>
     <span class="save-indicator" id="saveStatus"><span class="save-dot"></span> Salvo</span>
   </header>
 
@@ -580,6 +610,24 @@ if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
 initExerciseCatalog();
 initWorkout();
 renderHome();
+
+// Apresentação de marca: completa na primeira abertura, curta nas seguintes.
+(function runBrandSplash(){
+  const splash = document.getElementById('splashScreen');
+  if (!splash) return;
+  const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let firstVisit = false;
+  try {
+    firstVisit = localStorage.getItem('mc-prime-splash-seen') !== '1';
+    localStorage.setItem('mc-prime-splash-seen', '1');
+  } catch (_) { firstVisit = true; }
+  if (!firstVisit) splash.classList.add('is-quick');
+  const duration = reducedMotion ? 80 : (firstVisit ? 900 : 360);
+  window.setTimeout(() => {
+    splash.classList.add('is-leaving');
+    window.setTimeout(() => splash.remove(), reducedMotion ? 20 : 380);
+  }, duration);
+})();
 </script>
 </body>
 </html>
