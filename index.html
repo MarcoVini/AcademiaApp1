@@ -104,20 +104,24 @@
     .exercise-title-wrap{display:flex;flex-direction:column;gap:4px;min-width:0;flex:1}
     .exercise-title{font-size:15px;line-height:1.3;overflow-wrap:anywhere}
     .exercise-summary{font-size:11px;line-height:1.35;color:var(--muted);font-weight:500;overflow-wrap:anywhere}
-    .exercise-chevron{flex:0 0 auto;color:var(--muted);font-size:23px;line-height:1;transform:rotate(0);transition:transform .22s cubic-bezier(.2,.7,.2,1),color .22s ease}
+    .exercise-chevron{flex:0 0 auto;color:var(--muted);font-size:23px;line-height:1;transform:rotate(0);transition:transform .28s cubic-bezier(.22,.75,.25,1),color .22s ease}
     .exercise-accordion.is-expanded .exercise-chevron{transform:rotate(180deg);color:var(--accent)}
     .exercise-heading .donebtn{flex:0 0 auto;max-width:118px;padding:9px 10px;font-size:12px;white-space:normal}
-    .exercise-body-wrap{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows .25s cubic-bezier(.2,.7,.2,1),opacity .18s ease}
+    .exercise-body-wrap{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows .29s cubic-bezier(.22,.75,.25,1),opacity .22s ease}
     .exercise-accordion.is-expanded .exercise-body-wrap{grid-template-rows:1fr;opacity:1}
-    .exercise-body{min-height:0;overflow:hidden;padding:0 12px 0;transition:padding .25s ease}
+    .exercise-body{min-height:0;overflow:hidden;padding:0 12px 0;transition:padding .29s cubic-bezier(.22,.75,.25,1)}
     .exercise-accordion.is-expanded .exercise-body{padding:0 12px 13px}
     .exercise-body-wrap[aria-hidden="true"] .exercise-body{pointer-events:none}
     .exercise-body .setline{grid-template-columns:28px minmax(0,1fr) minmax(0,1fr) minmax(0,1fr) 34px;gap:5px}
     .exercise-body .setline input{min-width:0;width:100%;padding:9px 3px;text-align:center}
     .exercise-body .exercise-actions>*{min-width:0;flex:1}
     .exercise-body .alt-toggle{margin-top:8px}
-    .screen-enter{animation:screenEnter .22s cubic-bezier(.2,.7,.2,1) both}
+    .screen-enter{animation:screenEnter .24s cubic-bezier(.2,.7,.2,1) both}
+    .screen-slide-forward{animation:screenSlideForward .32s cubic-bezier(.22,.75,.25,1) both;will-change:transform,opacity}
+    .screen-slide-backward{animation:screenSlideBackward .32s cubic-bezier(.22,.75,.25,1) both;will-change:transform,opacity}
     @keyframes screenEnter{from{opacity:.72;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes screenSlideForward{from{opacity:.72;transform:translateX(24px)}to{opacity:1;transform:translateX(0)}}
+    @keyframes screenSlideBackward{from{opacity:.72;transform:translateX(-24px)}to{opacity:1;transform:translateX(0)}}
     .quick-add-panel:not(.hidden){animation:panelEnter .22s cubic-bezier(.2,.7,.2,1) both}
     @keyframes panelEnter{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
     .settings-accordion .settings-content{animation:settingsEnter .2s ease both}
@@ -426,7 +430,21 @@ function renderHome(){
  if(!latest.length){recent.innerHTML='<div class="recent-empty"><strong>Teu histórico começa aqui.</strong>Conclua um treino para ver suas atividades recentes e acompanhar a frequência por aqui.</div>';return}
  latest.forEach(h=>{const row=document.createElement('div');row.className='recent-row';const ico=document.createElement('div');ico.className='recent-date-icon';ico.textContent='↗';const info=document.createElement('div');info.className='recent-row-info';const title=document.createElement('strong');title.textContent=h.sessionName||planName(h.session);const meta=document.createElement('span');meta.textContent=h.date||'Treino registrado';info.append(title,meta);const count=document.createElement('span');count.className='recent-row-count';count.textContent=`${(h.exercises||[]).length} exercícios`;row.append(ico,info,count);recent.append(row)});
 }
-function switchTab(tab){if(tab==='settings')returnExerciseEditorHome();const current=document.querySelector('[id^="tab-"]:not(.hidden)');document.querySelectorAll('[id^="tab-"]').forEach(el=>{el.classList.add('hidden');el.classList.remove('screen-enter')});const target=document.getElementById('tab-'+tab);if(target){target.classList.remove('hidden');void target.offsetWidth;target.classList.add('screen-enter')}document.querySelectorAll('.bottom-nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));if(tab==='history')renderHistory();if(tab==='home')renderHome();window.scrollTo({top:0,behavior:'smooth'})}
+function switchTab(tab){
+ if(tab==='settings')returnExerciseEditorHome();
+ const current=document.querySelector('[id^="tab-"]:not(.hidden)');
+ const order=['home','workout','history','settings'];
+ const currentTab=current?current.id.replace('tab-',''):tab;
+ if(currentTab===tab){document.querySelectorAll('.bottom-nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));return}
+ const direction=order.indexOf(tab)>=order.indexOf(currentTab)?'forward':'backward';
+ document.querySelectorAll('[id^="tab-"]').forEach(el=>{el.classList.add('hidden');el.classList.remove('screen-enter','screen-slide-forward','screen-slide-backward')});
+ const target=document.getElementById('tab-'+tab);
+ if(target){target.classList.remove('hidden');void target.offsetWidth;target.classList.add(direction==='forward'?'screen-slide-forward':'screen-slide-backward')}
+ document.querySelectorAll('.bottom-nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
+ if(tab==='history')renderHistory();
+ if(tab==='home')renderHome();
+ window.scrollTo({top:0,behavior:'smooth'});
+}
 function finishWorkout(){const ex=plan().map((e,i)=>({name:e.name,sets:(workout[i]?.sets||[]).map(s=>({...s}))}));data.history.push({date:new Date().toLocaleString('pt-BR'),profile:currentProfile,session:currentSession,sessionName:planName(),exercises:ex});const p=data.profiles[currentProfile],order=p.planOrder.filter(k=>p.plans[k]);p.next=order[(Math.max(0,order.indexOf(currentSession))+1)%order.length]||currentSession;save();currentSession=p.next;initWorkout();alert('Treino salvo! Próximo treino: '+planName());switchTab('history')}
 document.querySelectorAll('.bottom-nav-btn').forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));
 document.getElementById('homeStartWorkout').onclick=()=>switchTab('workout');
