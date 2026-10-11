@@ -78,6 +78,12 @@
     .historyitem{background:var(--panel);border-color:var(--line)}.historychip{border-color:#343b46;background:#20252d}.statbox{background:var(--panel2);border-color:var(--line)}
     @media(min-width:700px){.wrap{padding-top:24px}.home-greeting h2{font-size:31px}.dashboard-stat{padding:18px}.frequency-chart{height:86px}}
     @media(max-width:420px){.wrap{padding:12px 12px calc(108px + env(safe-area-inset-bottom))}.app-header{margin-bottom:22px}.home-greeting h2{font-size:24px}.home-avatar{width:42px;height:42px;flex-basis:42px}.dashboard-stat{padding:12px}.dashboard-stat strong{font-size:28px}.frequency-chart,.frequency-days{gap:6px}.bottom-nav{padding-left:8px;padding-right:8px}.bottom-nav-btn{font-size:9px}.workout-config h2{font-size:20px}}
+
+    .quick-add-panel{margin:14px 0 16px;padding:14px;background:linear-gradient(145deg,#191e25,#14171d);border:1px solid #3a4431;border-radius:18px;box-shadow:0 12px 30px #0003}
+    .quick-add-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}.quick-add-heading h2{margin:0;font-size:20px}.quick-add-heading .eyebrow{margin-bottom:4px}.quick-add-heading .iconbtn{flex:0 0 auto}
+    .exercise-editor{padding:0}.editor-description{font-size:13px;margin:0 0 12px}.custom-toggle{display:flex;align-items:center;gap:8px;font-size:13px!important;color:var(--text)!important}.custom-toggle input{accent-color:var(--accent)}
+    .settings-intro{font-size:13px;margin:-5px 0 14px}.settings-accordion{background:var(--panel);border:1px solid var(--line);border-radius:16px;margin:10px 0;overflow:hidden}.settings-accordion>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:12px;padding:15px;min-height:72px}.settings-accordion>summary::-webkit-details-marker{display:none}.settings-summary-icon{width:38px;height:38px;flex:0 0 38px;display:grid;place-items:center;border-radius:12px;background:var(--panel2);color:var(--accent);font-size:21px;font-weight:800}.settings-summary-copy{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0}.settings-summary-copy strong{font-size:14px}.settings-summary-copy small{font-size:11px;color:var(--muted)}.summary-chevron{font-size:21px;color:var(--muted);transition:transform .18s}.settings-accordion[open] .summary-chevron{transform:rotate(180deg)}.settings-content{padding:0 15px 16px;border-top:1px solid var(--line)}.settings-content>.exercise-editor{padding-top:14px}.settings-content .plan-management{padding-top:2px}.settings-content .row{align-items:end}.settings-content .row button{min-height:42px}
+
   </style>
 </head>
 <body>
@@ -105,8 +111,12 @@
     <div class="workout-config card"><div class="workout-config-top"><div><p class="eyebrow">HORA DE TREINAR</p><h2 id="workoutTitle">Full Body A</h2></div><button class="secondary timer-button" id="timerOpen"><span>◷</span> Descanso</button></div><div><label for="session">ESCOLHER FICHA</label><select id="session"></select></div><p class="small">Registre carga, repetições e RIR em cada série.</p></div>
     <div id="exerciseList"></div>
     <div class="row topgap">
-      <button class="secondary" id="addExercise">+ Exercício</button>
+      <button class="secondary" id="addExercise" aria-expanded="false" aria-controls="quickAddPanel">+ Exercício</button>
       <button id="finishWorkout">Concluir treino ✓</button>
+    </div>
+    <div id="quickAddPanel" class="quick-add-panel hidden">
+      <div class="quick-add-heading"><div><p class="eyebrow">ADICIONAR À FICHA</p><h2>Novo exercício</h2></div><button type="button" class="iconbtn" id="closeQuickAdd" aria-label="Fechar">✕</button></div>
+      <div id="quickAddEditorMount"></div>
     </div>
     <p class="small">RIR = repetições em reserva: quantas reps você ainda conseguiria fazer ao terminar a série.</p>
   </section>
@@ -121,28 +131,35 @@
   </section>
 
   <section id="tab-settings" class="hidden">
-    <h2>Ajustes e backup</h2>
-    <div class="card">
-      <h2>Minhas fichas e exercícios</h2>
-      <p>Crie divisões personalizadas, além dos treinos A e B.</p>
-      <div class="row"><div><label for="newPlanName">Nome da nova ficha</label><input id="newPlanName" placeholder="Ex.: Peito e tríceps"></div><div style="display:flex;align-items:end"><button id="createPlan" style="width:100%">Criar ficha</button></div></div>
-      <div id="planManagement" class="plan-management"></div>
-      <hr style="border:0;border-top:1px solid var(--border);margin:18px 0">
-      <h2>Adicionar exercício à ficha</h2>
-      <p>Pesquise no catálogo e selecione um exercício padronizado. Você também pode cadastrar um nome personalizado se não encontrar o que precisa.</p>
-      <div class="row"><div><label for="editSession">Ficha</label><select id="editSession"></select></div><div><label for="exerciseCategory">Filtrar categoria</label><select id="exerciseCategory"><option value="all">Todas as categorias</option></select></div></div>
-      <div class="topgap"><label for="exerciseSearch">Escolher exercício</label><input id="exerciseSearch" autocomplete="off" placeholder="Digite para buscar ou escolha na lista abaixo..."><div id="exerciseResults" class="catalog-results" role="listbox" aria-label="Exercícios do catálogo"></div><p class="small" id="exerciseSelectionHint">Selecione um exercício na lista para adicioná-lo à ficha.</p></div>
-      <label class="topgap" style="display:flex;align-items:center;gap:8px;font-size:13px"><input id="customExerciseToggle" type="checkbox" style="width:auto"> Não encontrei: cadastrar nome personalizado</label>
-      <div id="customExerciseBox" class="hidden topgap"><label for="exerciseName">Nome personalizado</label><input id="exerciseName" placeholder="Ex.: exercício específico da sua academia"></div>
-      <div class="row topgap"><div><label for="exerciseSets">Número de séries</label><select id="exerciseSets"><option>2</option><option selected>3</option><option>4</option><option>5</option><option>6</option></select></div><div style="display:flex;align-items:end"><button id="saveExercise" style="width:100%">Salvar exercício</button></div></div>
-    </div>
-    <div class="card">
-      <h2>Dados e privacidade</h2>
-      <p>Os registros ficam neste navegador e neste aparelho. Não há conta nem servidor. Exporte um backup regularmente para não perder seu histórico.</p>
-      <div class="row topgap"><button class="secondary" id="exportData">Exportar backup</button><button class="secondary" id="importButton">Importar backup</button><input class="hidden" type="file" id="importFile" accept="application/json"></div>
-      <div class="row topgap"><button class="danger" id="clearData">Apagar todos os dados</button></div>
-    </div>
-    <div class="notice">Dica: para instalar como PWA e usar offline, o projeto precisa estar hospedado em HTTPS. O arquivo ZIP inclui instruções para publicar gratuitamente no GitHub Pages.</div>
+    <h2>Ajustes</h2>
+    <p class="settings-intro">Escolha o que deseja configurar. As opções ficam recolhidas para deixar a tela mais limpa.</p>
+    <details class="settings-accordion" open>
+      <summary><span class="settings-summary-icon">▤</span><span class="settings-summary-copy"><strong>Minhas fichas</strong><small>Criar, consultar e organizar treinos</small></span><span class="summary-chevron">⌄</span></summary>
+      <div class="settings-content">
+        <div class="row"><div><label for="newPlanName">Nome da nova ficha</label><input id="newPlanName" placeholder="Ex.: Peito e tríceps"></div><div style="display:flex;align-items:end"><button id="createPlan" style="width:100%">Criar ficha</button></div></div>
+        <div id="planManagement" class="plan-management"></div>
+      </div>
+    </details>
+    <details class="settings-accordion" id="settingsExerciseAccordion">
+      <summary><span class="settings-summary-icon">＋</span><span class="settings-summary-copy"><strong>Exercícios</strong><small>Catálogo, exercícios personalizados e séries</small></span><span class="summary-chevron">⌄</span></summary>
+      <div class="settings-content"><div id="exerciseEditorHome"><div id="exerciseEditor" class="exercise-editor">
+        <p class="editor-description">Pesquise no catálogo e selecione um exercício. Se não encontrar, você pode cadastrar um nome personalizado.</p>
+        <div class="row"><div><label for="editSession">Adicionar à ficha</label><select id="editSession"></select></div><div><label for="exerciseCategory">Categoria</label><select id="exerciseCategory"><option value="all">Todas as categorias</option></select></div></div>
+        <div class="topgap"><label for="exerciseSearch">Buscar exercício</label><input id="exerciseSearch" autocomplete="off" placeholder="Digite para filtrar o catálogo..."><div id="exerciseResults" class="catalog-results" role="listbox" aria-label="Exercícios do catálogo"></div><p class="small" id="exerciseSelectionHint">Selecione um exercício na lista.</p></div>
+        <label class="custom-toggle topgap"><input id="customExerciseToggle" type="checkbox" style="width:auto"> Não encontrei: cadastrar nome personalizado</label>
+        <div id="customExerciseBox" class="hidden topgap"><label for="exerciseName">Nome personalizado</label><input id="exerciseName" placeholder="Ex.: exercício específico da sua academia"></div>
+        <div class="row topgap"><div><label for="exerciseSets">Número de séries</label><select id="exerciseSets"><option>2</option><option selected>3</option><option>4</option><option>5</option><option>6</option></select></div><div style="display:flex;align-items:end"><button id="saveExercise" style="width:100%">Adicionar exercício</button></div></div>
+      </div></div></div>
+    </details>
+    <details class="settings-accordion">
+      <summary><span class="settings-summary-icon">⇅</span><span class="settings-summary-copy"><strong>Dados e backup</strong><small>Exportar, importar ou apagar dados locais</small></span><span class="summary-chevron">⌄</span></summary>
+      <div class="settings-content">
+        <p>Os registros ficam neste navegador e neste aparelho. Não há conta nem servidor. Exporte um backup regularmente para não perder seu histórico.</p>
+        <div class="row topgap"><button class="secondary" id="exportData">Exportar backup</button><button class="secondary" id="importButton">Importar backup</button><input class="hidden" type="file" id="importFile" accept="application/json"></div>
+        <div class="row topgap"><button class="danger" id="clearData">Apagar todos os dados</button></div>
+      </div>
+    </details>
+    <div class="notice">Dica: o app funciona offline depois de carregado. Exporte um backup antes de trocar de navegador ou aparelho.</div>
   </section>
 </div>
 
@@ -206,7 +223,7 @@ function renderWorkout(){
  document.getElementById('workoutTitle').textContent=planName();
  document.getElementById('session').value=currentSession;
  document.getElementById('profile').value=currentProfile;
- const list=document.getElementById('exerciseList');list.innerHTML='';if(!plan().length){list.innerHTML='<div class="historyempty"><strong>Ficha vazia</strong><p>Abra Ajustes e backup para adicionar exercícios.</p></div>'}
+ const list=document.getElementById('exerciseList');list.innerHTML='';if(!plan().length){list.innerHTML='<div class="historyempty"><strong>Ficha vazia</strong><p>Toque em + Exercício para adicionar movimentos a esta ficha.</p></div>'}
  plan().forEach((ex,i)=>{
   if(!workout[i])workout[i]={sets:Array.from({length:ex.sets},()=>({weight:'',reps:'',rir:'2',done:false}))};
   const box=document.createElement('div');box.className='exercise'+(workout[i].sets.every(s=>s.done)?' done':'');
@@ -302,7 +319,7 @@ function renderHome(){
  if(!latest.length){recent.innerHTML='<div class="recent-empty"><strong>Teu histórico começa aqui.</strong>Conclua um treino para ver suas atividades recentes e acompanhar a frequência por aqui.</div>';return}
  latest.forEach(h=>{const row=document.createElement('div');row.className='recent-row';const ico=document.createElement('div');ico.className='recent-date-icon';ico.textContent='↗';const info=document.createElement('div');info.className='recent-row-info';const title=document.createElement('strong');title.textContent=h.sessionName||planName(h.session);const meta=document.createElement('span');meta.textContent=h.date||'Treino registrado';info.append(title,meta);const count=document.createElement('span');count.className='recent-row-count';count.textContent=`${(h.exercises||[]).length} exercícios`;row.append(ico,info,count);recent.append(row)});
 }
-function switchTab(tab){document.querySelectorAll('[id^="tab-"]').forEach(el=>el.classList.add('hidden'));const target=document.getElementById('tab-'+tab);if(target)target.classList.remove('hidden');document.querySelectorAll('.bottom-nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));if(tab==='history')renderHistory();if(tab==='home')renderHome();window.scrollTo({top:0,behavior:'smooth'})}
+function switchTab(tab){if(tab==='settings')returnExerciseEditorHome();document.querySelectorAll('[id^="tab-"]').forEach(el=>el.classList.add('hidden'));const target=document.getElementById('tab-'+tab);if(target)target.classList.remove('hidden');document.querySelectorAll('.bottom-nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));if(tab==='history')renderHistory();if(tab==='home')renderHome();window.scrollTo({top:0,behavior:'smooth'})}
 function finishWorkout(){const ex=plan().map((e,i)=>({name:e.name,sets:(workout[i]?.sets||[]).map(s=>({...s}))}));data.history.push({date:new Date().toLocaleString('pt-BR'),profile:currentProfile,session:currentSession,sessionName:planName(),exercises:ex});const p=data.profiles[currentProfile],order=p.planOrder.filter(k=>p.plans[k]);p.next=order[(Math.max(0,order.indexOf(currentSession))+1)%order.length]||currentSession;save();currentSession=p.next;initWorkout();alert('Treino salvo! Próximo treino: '+planName());switchTab('history')}
 document.querySelectorAll('.bottom-nav-btn').forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));
 document.getElementById('homeStartWorkout').onclick=()=>switchTab('workout');
@@ -310,7 +327,10 @@ document.getElementById('homeSeeHistory').onclick=()=>switchTab('history');
 document.getElementById('profile').onchange=e=>{currentProfile=e.target.value;currentSession=data.profiles[currentProfile].next;initWorkout();renderHome();renderPlanManagement()};
 document.getElementById('session').onchange=e=>{currentSession=e.target.value;initWorkout()};
 document.getElementById('finishWorkout').onclick=finishWorkout;
-document.getElementById('addExercise').onclick=()=>{switchTab('settings');document.getElementById('editSession').value=currentSession;document.getElementById('exerciseName').focus()};
+function returnExerciseEditorHome(){const editor=document.getElementById('exerciseEditor'),home=document.getElementById('exerciseEditorHome'),panel=document.getElementById('quickAddPanel');if(editor&&home&&editor.parentElement!==home)home.append(editor);if(panel)panel.classList.add('hidden');const add=document.getElementById('addExercise');if(add)add.setAttribute('aria-expanded','false')}
+function openQuickAdd(){const editor=document.getElementById('exerciseEditor'),mount=document.getElementById('quickAddEditorMount'),panel=document.getElementById('quickAddPanel'),add=document.getElementById('addExercise');if(panel.classList.contains('hidden')){mount.append(editor);panel.classList.remove('hidden');add.setAttribute('aria-expanded','true');document.getElementById('editSession').value=currentSession;document.getElementById('exerciseSearch').focus();panel.scrollIntoView({behavior:'smooth',block:'nearest'})}else{returnExerciseEditorHome()}}
+document.getElementById('addExercise').onclick=openQuickAdd;
+document.getElementById('closeQuickAdd').onclick=returnExerciseEditorHome;
 function renderPlanManagement(){
  const el=document.getElementById('planManagement'); if(!el)return; el.innerHTML='';
  const p=data.profiles[currentProfile];
@@ -348,7 +368,7 @@ function renderExerciseCatalog(){
 document.getElementById('exerciseSearch').addEventListener('input',()=>{selectedCatalogExercise='';document.getElementById('exerciseSelectionHint').textContent='Selecione um exercício na lista para adicioná-lo à ficha.';renderExerciseCatalog()});
 document.getElementById('exerciseCategory').addEventListener('change',renderExerciseCatalog);
 document.getElementById('customExerciseToggle').addEventListener('change',e=>{document.getElementById('customExerciseBox').classList.toggle('hidden',!e.target.checked);document.getElementById('exerciseSearch').disabled=e.target.checked;document.getElementById('exerciseCategory').disabled=e.target.checked;document.getElementById('exerciseResults').classList.toggle('hidden',e.target.checked)});
-document.getElementById('saveExercise').onclick=()=>{const custom=document.getElementById('customExerciseToggle').checked;const name=custom?document.getElementById('exerciseName').value.trim():selectedCatalogExercise;const sess=document.getElementById('editSession').value;const sets=Number(document.getElementById('exerciseSets').value);if(!name){alert(custom?'Digite o nome do exercício personalizado.':'Selecione um exercício na lista do catálogo.');return}data.profiles[currentProfile].plans[sess].push({name,sets});save();document.getElementById('exerciseName').value='';document.getElementById('customExerciseToggle').checked=false;document.getElementById('customExerciseBox').classList.add('hidden');document.getElementById('exerciseSearch').disabled=false;document.getElementById('exerciseCategory').disabled=false;document.getElementById('exerciseResults').classList.remove('hidden');document.getElementById('exerciseSearch').value='';selectedCatalogExercise='';document.getElementById('exerciseSelectionHint').textContent='Selecione um exercício na lista para adicioná-lo à ficha.';renderExerciseCatalog();if(sess===currentSession)initWorkout();renderPlanManagement();alert('Exercício adicionado!')};
+document.getElementById('saveExercise').onclick=()=>{const custom=document.getElementById('customExerciseToggle').checked;const name=custom?document.getElementById('exerciseName').value.trim():selectedCatalogExercise;const sess=document.getElementById('editSession').value;const sets=Number(document.getElementById('exerciseSets').value);if(!name){alert(custom?'Digite o nome do exercício personalizado.':'Selecione um exercício na lista do catálogo.');return}data.profiles[currentProfile].plans[sess].push({name,sets});save();document.getElementById('exerciseName').value='';document.getElementById('customExerciseToggle').checked=false;document.getElementById('customExerciseBox').classList.add('hidden');document.getElementById('exerciseSearch').disabled=false;document.getElementById('exerciseCategory').disabled=false;document.getElementById('exerciseResults').classList.remove('hidden');document.getElementById('exerciseSearch').value='';selectedCatalogExercise='';document.getElementById('exerciseSelectionHint').textContent='Selecione um exercício na lista para adicioná-lo à ficha.';renderExerciseCatalog();if(sess===currentSession)initWorkout();renderPlanManagement();if(!document.getElementById('quickAddPanel').classList.contains('hidden'))returnExerciseEditorHome();alert('Exercício adicionado!')};
 document.getElementById('exportData').onclick=()=>{const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='backup-treino.json';a.click();URL.revokeObjectURL(a.href)};
 document.getElementById('importButton').onclick=()=>document.getElementById('importFile').click();
 document.getElementById('importFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const imported=JSON.parse(await f.text());if(!imported.profiles||!imported.history)throw new Error('Arquivo inválido');data=imported;save();currentSession=data.profiles[currentProfile].next||'A';initExerciseCatalog();initWorkout();renderHistory();alert('Backup importado!')}catch(err){alert('Não consegui importar esse arquivo. Confira se é um backup válido.')}e.target.value=''};
