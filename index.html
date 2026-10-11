@@ -120,8 +120,8 @@
     .screen-slide-forward{animation:screenSlideForward .32s cubic-bezier(.22,.75,.25,1) both;will-change:transform,opacity}
     .screen-slide-backward{animation:screenSlideBackward .32s cubic-bezier(.22,.75,.25,1) both;will-change:transform,opacity}
     @keyframes screenEnter{from{opacity:.72;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
-    @keyframes screenSlideForward{from{opacity:.72;transform:translateX(24px)}to{opacity:1;transform:translateX(0)}}
-    @keyframes screenSlideBackward{from{opacity:.72;transform:translateX(-24px)}to{opacity:1;transform:translateX(0)}}
+    @keyframes screenSlideForward{from{opacity:.68;transform:translateX(28px) scale(.992);filter:blur(1px)}to{opacity:1;transform:translateX(0) scale(1);filter:blur(0)}}
+    @keyframes screenSlideBackward{from{opacity:.68;transform:translateX(-28px) scale(.992);filter:blur(1px)}to{opacity:1;transform:translateX(0) scale(1);filter:blur(0)}}
     .quick-add-panel:not(.hidden){animation:panelEnter .22s cubic-bezier(.2,.7,.2,1) both}
     @keyframes panelEnter{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
     .settings-accordion .settings-content{animation:settingsEnter .2s ease both}
@@ -129,6 +129,27 @@
     button{transition:filter .16s ease,transform .16s ease,background-color .18s ease}
     button:active{transform:scale(.985)}
     @media(max-width:420px){.exercise-heading{padding:11px 10px;gap:6px}.exercise-title{font-size:14px}.exercise-summary{font-size:10px}.exercise-heading .donebtn{max-width:94px;padding:8px 7px;font-size:11px}.exercise-body{padding-left:10px;padding-right:10px}.exercise-accordion.is-expanded .exercise-body{padding-left:10px;padding-right:10px}}
+    /* Microinterações e feedbacks */
+    button{transform-origin:center; -webkit-tap-highlight-color:transparent}
+    button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+    .set-check{transition:transform .18s cubic-bezier(.2,.8,.2,1),background-color .2s,color .2s,border-color .2s}
+    .set-check.just-completed{animation:checkPop .28s cubic-bezier(.2,.9,.25,1.2)}
+    @keyframes checkPop{0%{transform:scale(.82)}65%{transform:scale(1.13)}100%{transform:scale(1)}}
+    .dashboard-stat,.progress-card,.next-workout-card,.recent-row{animation:dashboardRise .38s cubic-bezier(.2,.7,.2,1) both}
+    .dashboard-stat:nth-child(2){animation-delay:.05s}.progress-card{animation-delay:.08s}.next-workout-card{animation-delay:.12s}.recent-row:nth-child(2){animation-delay:.04s}.recent-row:nth-child(3){animation-delay:.08s}
+    @keyframes dashboardRise{from{opacity:.25;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    .frequency-fill{height:0;transition:height .52s cubic-bezier(.2,.7,.25,1),background-color .2s ease}
+    .alternative-backdrop{transition:opacity .24s cubic-bezier(.2,.7,.2,1)}
+    .alternative-sheet{transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+    .completion-backdrop{position:fixed;inset:0;z-index:1200;display:flex;align-items:center;justify-content:center;padding:20px;background:#000b;opacity:0;transition:opacity .24s ease}
+    .completion-backdrop:not(.hidden){opacity:1}
+    .completion-card{width:min(420px,100%);padding:28px 22px 22px;text-align:center;background:linear-gradient(155deg,#20272b,#15181e);border:1px solid #394536;border-radius:26px;box-shadow:0 24px 80px #0009;transform:translateY(14px) scale(.98);transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+    .completion-backdrop:not(.hidden) .completion-card{transform:translateY(0) scale(1)}
+    .completion-mark{width:76px;height:76px;display:grid;place-items:center;margin:0 auto 16px;border-radius:50%;background:#2a3b20;border:1px solid #516d38;color:var(--accent);font-size:38px;animation:completionPop .48s cubic-bezier(.2,.9,.25,1.15) both}
+    @keyframes completionPop{from{opacity:0;transform:scale(.55) rotate(-12deg)}to{opacity:1;transform:scale(1) rotate(0)}}
+    .completion-card h2{font-size:25px;margin:0 0 7px}.completion-card p{line-height:1.55}.completion-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:18px 0}.completion-stat{background:#101319;border:1px solid var(--line);border-radius:14px;padding:12px}.completion-stat strong{display:block;color:var(--accent);font-size:23px}.completion-stat span{font-size:11px;color:var(--muted)}.completion-actions{display:grid;gap:8px}.completion-actions button{min-height:46px}
+    .toast-message{position:fixed;z-index:1300;left:50%;bottom:calc(86px + env(safe-area-inset-bottom));transform:translate(-50%,12px);opacity:0;pointer-events:none;background:#252d20;border:1px solid #435b32;color:#e7ffd1;border-radius:999px;padding:10px 15px;font-size:13px;font-weight:700;box-shadow:0 8px 30px #0006;transition:opacity .2s ease,transform .2s ease;white-space:nowrap;max-width:calc(100vw - 28px);overflow:hidden;text-overflow:ellipsis}
+    .toast-message.visible{opacity:1;transform:translate(-50%,0)}
     @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 
   </style>
@@ -217,6 +238,17 @@
   <button class="bottom-nav-btn" data-tab="settings" aria-label="Ajustes"><span class="nav-icon">⚙</span><span>Ajustes</span></button>
 </nav>
 
+<div id="completionBackdrop" class="completion-backdrop hidden" aria-hidden="true">
+  <section class="completion-card" role="dialog" aria-modal="true" aria-labelledby="completionTitle">
+    <div class="completion-mark" aria-hidden="true">✓</div>
+    <p class="eyebrow">SESSÃO REGISTRADA</p>
+    <h2 id="completionTitle">Treino concluído!</h2>
+    <p id="completionMessage">Mais um passo na tua evolução.</p>
+    <div class="completion-stats"><div class="completion-stat"><strong id="completionExercises">0</strong><span>exercícios</span></div><div class="completion-stat"><strong id="completionSets">0</strong><span>séries concluídas</span></div></div>
+    <div class="completion-actions"><button id="completionHistory">Ver histórico</button><button class="secondary" id="completionClose">Continuar</button></div>
+  </section>
+</div>
+<div id="toastMessage" class="toast-message" role="status" aria-live="polite"></div>
 <div id="alternativeBackdrop" class="alternative-backdrop hidden" aria-hidden="true">
   <section id="alternativeSheet" class="alternative-sheet" role="dialog" aria-modal="true" aria-labelledby="alternativeSheetTitle">
     <div class="sheet-grabber" aria-hidden="true"></div>
@@ -337,7 +369,7 @@ function renderWorkout(){
   const chevron=document.createElement('span');chevron.className='exercise-chevron';chevron.textContent='⌄';
   titleWrap.append(title,summary);toggle.append(titleWrap,chevron);
   toggle.onclick=()=>{openExerciseIndex=expanded?-1:i;renderWorkout()};
-  const done=document.createElement('button');done.type='button';done.className='iconbtn donebtn';done.textContent=sets.every(s=>s.done)?'✓ Feito':'Marcar feito';done.setAttribute('aria-label',sets.every(s=>s.done)?'Desmarcar todas as séries':'Marcar todas as séries como feitas');done.onclick=()=>{const val=!sets.every(s=>s.done);sets.forEach(s=>s.done=val);renderWorkout()};
+  const done=document.createElement('button');done.type='button';done.className='iconbtn donebtn';done.textContent=sets.every(s=>s.done)?'✓ Feito':'Marcar feito';done.setAttribute('aria-label',sets.every(s=>s.done)?'Desmarcar todas as séries':'Marcar todas as séries como feitas');done.onclick=()=>{const val=!sets.every(s=>s.done);sets.forEach(s=>s.done=val);save();renderWorkout();showToast(val?'Exercício concluído':'Marcações removidas')};
   head.append(toggle,done);box.append(head);
   const bodyWrap=document.createElement('div');bodyWrap.className='exercise-body-wrap';bodyWrap.id='exercise-body-'+i;bodyWrap.setAttribute('aria-hidden',String(!expanded));bodyWrap.inert=!expanded;
   const body=document.createElement('div');body.className='exercise-body';
@@ -348,7 +380,7 @@ function renderWorkout(){
    const num=document.createElement('span');num.className='setnum';num.textContent=j+1;
    function field(key,placeholder,type='text'){const input=document.createElement('input');input.value=s[key];input.placeholder=placeholder;input.setAttribute('aria-label',`${ex.name}, série ${j+1}, ${placeholder}`);if(type==='number'){input.type='number';input.min='0';input.step='any'}input.onchange=()=>{s[key]=input.value;save();const active=document.activeElement;const pos=active&&active.selectionStart;renderWorkout();const matching=[...document.querySelectorAll(`#exercise-body-${i} input`)].find(el=>el.getAttribute('aria-label')===`${ex.name}, série ${j+1}, ${placeholder}`);if(matching){matching.focus();if(pos!==null&&matching.setSelectionRange)try{matching.setSelectionRange(pos,pos)}catch(e){}}};return input}
    const w=field('weight','kg','number'),r=field('reps','reps','number'),rir=field('rir','2','number');
-   const check=document.createElement('button');check.type='button';check.className='iconbtn set-check';check.textContent=s.done?'✓':'○';check.setAttribute('aria-label',s.done?`Desmarcar série ${j+1}`:`Concluir série ${j+1}`);check.onclick=()=>{s.done=!s.done;renderWorkout()};
+   const check=document.createElement('button');check.type='button';check.className='iconbtn set-check';check.textContent=s.done?'✓':'○';check.setAttribute('aria-label',s.done?`Desmarcar série ${j+1}`:`Concluir série ${j+1}`);check.onclick=()=>{s.done=!s.done;save();renderWorkout();if(s.done){const refreshed=document.querySelectorAll(`#exercise-body-${i} .set-check`)[j];if(refreshed){refreshed.classList.add('just-completed');setTimeout(()=>refreshed.classList.remove('just-completed'),320)}showToast(`Série ${j+1} concluída`)} };
    row.append(num,w,r,rir,check);body.append(row);
   });
   const foot=document.createElement('div');foot.className='row topgap exercise-actions';
@@ -424,7 +456,7 @@ function renderHome(){
  const counts=[];
  for(let offset=6;offset>=0;offset--){const d=new Date(startOfToday);d.setDate(d.getDate()-offset);const count=dated.filter(x=>x.date&&x.date.getFullYear()===d.getFullYear()&&x.date.getMonth()===d.getMonth()&&x.date.getDate()===d.getDate()).length;counts.push({d,count});}
  const max=Math.max(1,...counts.map(x=>x.count));
- counts.forEach(({d,count})=>{const col=document.createElement('div');col.className='frequency-column';const track=document.createElement('div');track.className='frequency-track';const fill=document.createElement('div');fill.className='frequency-fill'+(count?' has-workout':'');fill.style.height=count?`${Math.max(16,Math.round(count/max*100))}%`:'5%';fill.title=`${count} treino(s)`;track.append(fill);col.append(track);chart.append(col);const label=document.createElement('span');label.textContent=labels[d.getDay()];days.append(label)});
+ counts.forEach(({d,count})=>{const col=document.createElement('div');col.className='frequency-column';const track=document.createElement('div');track.className='frequency-track';const fill=document.createElement('div');fill.className='frequency-fill'+(count?' has-workout':'');const targetHeight=count?`${Math.max(16,Math.round(count/max*100))}%`:'5%';fill.style.height='0%';fill.title=`${count} treino(s)`;track.append(fill);requestAnimationFrame(()=>{fill.style.height=targetHeight});col.append(track);chart.append(col);const label=document.createElement('span');label.textContent=labels[d.getDay()];days.append(label)});
  const recent=document.getElementById('homeRecentActivity');recent.innerHTML='';
  const latest=rows.slice(0,3);
  if(!latest.length){recent.innerHTML='<div class="recent-empty"><strong>Teu histórico começa aqui.</strong>Conclua um treino para ver suas atividades recentes e acompanhar a frequência por aqui.</div>';return}
@@ -445,7 +477,23 @@ function switchTab(tab){
  if(tab==='home')renderHome();
  window.scrollTo({top:0,behavior:'smooth'});
 }
-function finishWorkout(){const ex=plan().map((e,i)=>({name:e.name,sets:(workout[i]?.sets||[]).map(s=>({...s}))}));data.history.push({date:new Date().toLocaleString('pt-BR'),profile:currentProfile,session:currentSession,sessionName:planName(),exercises:ex});const p=data.profiles[currentProfile],order=p.planOrder.filter(k=>p.plans[k]);p.next=order[(Math.max(0,order.indexOf(currentSession))+1)%order.length]||currentSession;save();currentSession=p.next;initWorkout();alert('Treino salvo! Próximo treino: '+planName());switchTab('history')}
+let completionNextSession='';
+function finishWorkout(){
+ const finishedName=planName(), finishedPlan=plan().map((e,i)=>({name:e.name,sets:(workout[i]?.sets||[]).map(s=>({...s}))}));
+ const doneSets=finishedPlan.reduce((n,e)=>n+e.sets.filter(s=>s.done).length,0);
+ data.history.push({date:new Date().toLocaleString('pt-BR'),timestamp:Date.now(),profile:currentProfile,session:currentSession,sessionName:finishedName,exercises:finishedPlan});
+ const p=data.profiles[currentProfile],order=p.planOrder.filter(k=>p.plans[k]);p.next=order[(Math.max(0,order.indexOf(currentSession))+1)%order.length]||currentSession;
+ completionNextSession=planName(p.next);save();currentSession=p.next;initWorkout();
+ document.getElementById('completionExercises').textContent=finishedPlan.length;
+ document.getElementById('completionSets').textContent=doneSets;
+ document.getElementById('completionMessage').textContent=`${finishedName} salvo. Cada sessão conta — segue nesse ritmo! Próximo: ${completionNextSession}.`;
+ const backdrop=document.getElementById('completionBackdrop');backdrop.classList.remove('hidden');backdrop.setAttribute('aria-hidden','false');
+}
+function closeCompletion(destination){const backdrop=document.getElementById('completionBackdrop');backdrop.classList.add('hidden');backdrop.setAttribute('aria-hidden','true');if(destination==='history')switchTab('history');else switchTab('workout')}
+document.getElementById('completionHistory').onclick=()=>closeCompletion('history');
+document.getElementById('completionClose').onclick=()=>closeCompletion('workout');
+document.getElementById('completionBackdrop').addEventListener('click',e=>{if(e.target===e.currentTarget)closeCompletion('workout')});
+function showToast(message){const toast=document.getElementById('toastMessage');if(!toast)return;toast.textContent=message;toast.classList.add('visible');clearTimeout(showToast._timer);showToast._timer=setTimeout(()=>toast.classList.remove('visible'),1700)}
 document.querySelectorAll('.bottom-nav-btn').forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));
 document.getElementById('homeStartWorkout').onclick=()=>switchTab('workout');
 document.getElementById('homeSeeHistory').onclick=()=>switchTab('history');
