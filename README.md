@@ -47,3 +47,11 @@ O formulário de exercícios agora inclui catálogo local pesquisável, filtro p
 
 
 Versão v6: exclusão de fichas personalizadas (A/B protegidas, histórico concluído preservado) e busca integrada ao catálogo na mesma lista de opções.
+
+
+## Redesign visual (v7)
+- Tela inicial com resumo de frequência mensal/semanal, gráfico dos últimos 7 dias, próximo treino e atividade recente.
+- Navegação inferior com Início, Treino, Histórico e Ajustes.
+- Tema dark modernizado com verde-lima como destaque e componentes mais espaçados.
+- Mantém os dados locais, as fichas A/B e personalizadas, catálogo, timer, histórico e backup.
+- Ao publicar esta versão, substitua os arquivos da raiz do repositório pelo conteúdo desta pasta. Faça backup dos dados antes de atualizar.

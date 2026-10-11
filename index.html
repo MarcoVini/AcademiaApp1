@@ -32,34 +32,77 @@
 .alt-toggle{margin-top:10px;width:100%;text-align:left}.alternatives{margin-top:10px;padding:12px;background:#0f1319;border:1px solid #364151;border-radius:12px}.alternative{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 0;border-bottom:1px solid #29313d}.alternative:last-child{border-bottom:0}.historyempty{border:1px dashed #3a4554;border-radius:16px;padding:28px 18px;text-align:center;color:var(--muted)}.historyempty .emoji{font-size:30px;margin-bottom:8px}
 @media(max-width:420px){.historystats{gap:6px}.statbox{padding:10px}.statbox strong{font-size:19px}.historyhead{padding:12px}.historytitle{font-size:16px}.historyactions{flex-direction:column}}.notice{background:#222b1b;border:1px solid #43532d;border-radius:12px;padding:11px;color:#dfffc2;font-size:13px}.timer{font-size:38px;font-weight:800;text-align:center;letter-spacing:1px;margin:10px}.empty{text-align:center;padding:24px 10px;color:var(--muted)}.topgap{margin-top:18px}
     @media(max-width:420px){.wrap{padding:12px 10px 100px}.card{padding:12px}.setline{grid-template-columns:28px 1fr 1fr 1fr 32px;gap:4px}.setline input{font-size:14px}.fields{gap:6px}h1{font-size:22px}}
+
+    :root{--border:var(--line);--accent-soft:#25331d;--surface:#12151b;--surface-raised:#1a1e26}
+    body{background:radial-gradient(ellipse at 50% -15%,#202a1a 0,transparent 42%),var(--bg);letter-spacing:.005em}
+    .wrap{max-width:680px;padding:18px 16px calc(112px + env(safe-area-inset-bottom))}
+    .app-header{margin:4px 0 24px;align-items:center}
+    .brand-lockup{display:flex;align-items:center;gap:11px}.brand-lockup h1{font-size:24px;letter-spacing:-1px}.brand-lockup p{font-size:12px;margin-top:1px}
+    .brand-mark{height:38px;width:38px;border-radius:13px;background:var(--accent);display:flex;align-items:end;justify-content:center;gap:3px;padding:10px}
+    .brand-mark span{display:block;width:4px;border-radius:4px;background:#151a10}.brand-mark span:nth-child(1){height:9px}.brand-mark span:nth-child(2){height:17px}.brand-mark span:nth-child(3){height:12px}
+    .save-indicator{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:11px;border:1px solid var(--line);padding:7px 10px;border-radius:999px;white-space:nowrap}
+    .save-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);display:inline-block}
+    .home-greeting{display:flex;justify-content:space-between;align-items:center;gap:14px;margin:6px 0 20px}
+    .eyebrow{font-size:10px;letter-spacing:1.7px;font-weight:800;color:var(--accent);margin:0 0 7px}
+    .home-greeting h2{font-size:27px;letter-spacing:-1.1px;line-height:1.12;margin:0 0 7px;max-width:330px}
+    .home-greeting p:not(.eyebrow){font-size:13px;margin:0;max-width:300px}
+    .home-avatar{height:48px;width:48px;flex:0 0 48px;border:1px solid #3a4730;background:linear-gradient(145deg,#2b3921,#171d15);border-radius:17px;display:grid;place-items:center;color:var(--accent);font-size:19px;font-weight:850}
+    .profile-picker{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#14171d;border:1px solid var(--line);border-radius:14px;padding:9px 12px;margin-bottom:24px}
+    .profile-picker label{margin:0;font-size:10px;letter-spacing:1.1px;font-weight:800}.profile-picker select{width:auto;max-width:58%;border:0;background:transparent;padding:5px 22px 5px 5px;text-align:right;font-size:13px;font-weight:700}
+    .section-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 1px 12px}.section-heading h3{font-size:16px;letter-spacing:-.3px;margin:0}.section-heading p{font-size:12px;margin:3px 0 0}.subtle-label{font-size:9px;letter-spacing:1.3px;color:var(--muted);font-weight:800}
+    .dashboard-stats{display:grid;grid-template-columns:1.12fr 1fr;gap:10px;margin-bottom:12px}
+    .dashboard-stat{min-width:0;position:relative;background:linear-gradient(145deg,#1c2028,#15181e);border:1px solid var(--line);border-radius:18px;padding:15px;display:flex;flex-direction:column;align-items:flex-start;gap:5px;overflow:hidden}
+    .dashboard-stat.stat-featured{border-color:#3c4a30;background:linear-gradient(145deg,#222b1c,#171b17)}
+    .stat-icon{height:30px;width:30px;display:grid;place-items:center;border-radius:10px;background:#2a3027;color:var(--accent);font-size:19px;margin-bottom:5px}
+    .stat-label{font-size:11px;color:var(--muted)}.dashboard-stat strong{font-size:31px;letter-spacing:-1.2px;line-height:1.1}.stat-foot{font-size:10px;color:var(--muted);line-height:1.35}
+    .card{border-radius:18px;margin:12px 0;padding:16px}.progress-card{background:var(--panel);border-color:var(--line);margin-top:12px}
+    .trend-badge{background:#252f20;color:var(--accent);border:1px solid #3a4a2d;border-radius:999px;padding:5px 8px;font-size:10px;font-weight:750;white-space:nowrap}
+    .frequency-chart{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:9px;align-items:end;height:75px;padding:8px 3px 0}
+    .frequency-column{height:100%;display:flex;align-items:center;justify-content:flex-end;flex-direction:column;gap:5px;min-width:0}
+    .frequency-track{height:53px;width:100%;max-width:24px;border-radius:7px;background:#292e37;display:flex;align-items:flex-end;overflow:hidden}
+    .frequency-fill{width:100%;min-height:3px;border-radius:7px;background:#4a5145;transition:height .2s ease}.frequency-fill.has-workout{background:var(--accent)}
+    .frequency-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:9px;margin-top:8px;text-align:center;color:var(--muted);font-size:10px}
+    .next-workout-card{margin:14px 0 23px;padding:18px;border-radius:20px;background:linear-gradient(125deg,#b8f36b,#9bd64c);color:#151a10;box-shadow:0 10px 28px #0002}
+    .next-workout-top{display:flex;align-items:center;justify-content:space-between}.next-workout-kicker{font-size:9px;letter-spacing:1.5px;font-weight:900;opacity:.7}.next-workout-symbol{height:30px;width:30px;border:1px solid #34462633;border-radius:10px;display:grid;place-items:center;font-size:19px}
+    .next-workout-card h3{font-size:24px;letter-spacing:-.7px;margin:10px 0 2px}.next-workout-card p{color:#28351d;font-size:12px;margin:0 0 15px}
+    .start-workout-btn{width:100%;display:flex;align-items:center;justify-content:space-between;background:#171c13;color:#f5f9ee;border-radius:12px;padding:13px 15px;font-size:13px}.start-workout-btn span{font-size:19px;color:var(--accent)}
+    .recent-heading{margin-top:4px}.text-button{background:transparent;color:var(--accent);padding:5px 0;font-size:11px}.recent-activity{margin-bottom:6px}
+    .recent-empty{padding:17px;border:1px dashed #343b45;border-radius:15px;color:var(--muted);font-size:12px;line-height:1.5}.recent-empty strong{display:block;color:var(--text);font-size:13px;margin-bottom:4px}
+    .recent-row{display:flex;align-items:center;gap:12px;padding:12px 2px;border-bottom:1px solid #282d36}.recent-row:last-child{border-bottom:0}.recent-date-icon{width:39px;height:39px;flex:0 0 39px;display:grid;place-items:center;border-radius:12px;background:#252b22;color:var(--accent);font-size:16px}.recent-row-info{flex:1;min-width:0}.recent-row-info strong{display:block;font-size:13px}.recent-row-info span{display:block;color:var(--muted);font-size:11px;margin-top:3px}.recent-row-count{color:var(--muted);font-size:11px;white-space:nowrap}
+    .workout-config{padding:15px;margin:0 0 16px}.workout-config-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}.workout-config h2{font-size:22px;margin:0;letter-spacing:-.6px}.workout-config .eyebrow{margin-bottom:4px}.workout-config label{font-size:10px;letter-spacing:1px;font-weight:800}.workout-config select{margin-top:5px}.workout-config .small{margin-top:10px;font-size:11px}.timer-button{white-space:nowrap;padding:9px 11px;font-size:12px}.timer-button span{color:var(--accent);margin-right:4px}
+    #tab-workout>.row.topgap{margin-bottom:12px}#tab-workout>.small{margin:10px 3px 0}
+    .bottom-nav{z-index:20;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;justify-content:stretch;padding:8px 12px calc(8px + env(safe-area-inset-bottom));background:#111318ed;border-top:1px solid #30343d}
+    .bottom-nav-btn{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:3px;background:transparent;color:#8e96a4;border:0;border-radius:12px;padding:5px 2px;font-size:10px;font-weight:650;max-width:none;min-width:0}
+    .bottom-nav-btn .nav-icon{font-size:20px;line-height:1.1}.bottom-nav-btn.active{background:#242d1e;color:var(--accent)}.bottom-nav-btn.active .nav-icon{font-weight:900}
+    .tabs{display:none}.exercise{padding:13px;border-radius:16px;background:#15181f}.exercise h3{letter-spacing:-.2px}.setline{margin:8px 0}.setline input{border-radius:9px;background:#0d1015}.iconbtn{border-radius:10px}.plan-row,.catalog-results{border-color:var(--line)}
+    .historyitem{background:var(--panel);border-color:var(--line)}.historychip{border-color:#343b46;background:#20252d}.statbox{background:var(--panel2);border-color:var(--line)}
+    @media(min-width:700px){.wrap{padding-top:24px}.home-greeting h2{font-size:31px}.dashboard-stat{padding:18px}.frequency-chart{height:86px}}
+    @media(max-width:420px){.wrap{padding:12px 12px calc(108px + env(safe-area-inset-bottom))}.app-header{margin-bottom:22px}.home-greeting h2{font-size:24px}.home-avatar{width:42px;height:42px;flex-basis:42px}.dashboard-stat{padding:12px}.dashboard-stat strong{font-size:28px}.frequency-chart,.frequency-days{gap:6px}.bottom-nav{padding-left:8px;padding-right:8px}.bottom-nav-btn{font-size:9px}.workout-config h2{font-size:20px}}
   </style>
 </head>
 <body>
 <div class="wrap">
-  <header>
-    <div><h1>Treino<span style="color:var(--accent)">.</span></h1><p>Seu diário de academia</p></div>
-    <span class="pill" id="saveStatus">Salvo no aparelho</span>
+  <header class="app-header">
+    <div class="brand-lockup"><div class="brand-mark"><span></span><span></span><span></span></div><div><h1>Treino<span style="color:var(--accent)">.</span></h1><p>Seu espaço de evolução</p></div></div>
+    <span class="save-indicator" id="saveStatus"><span class="save-dot"></span> Salvo</span>
   </header>
 
-  <div class="card">
-    <div class="row">
-      <div><label for="profile">Perfil</label><select id="profile"><option value="vini">Meu treino</option><option value="parceiro">Segundo perfil</option></select></div>
-      <div><label for="session">Treino atual</label><select id="session"></select></div>
+  <section id="tab-home" class="home-screen">
+    <div class="home-greeting"><div><p class="eyebrow">TEU PAINEL</p><h2>Um treino de cada vez.</h2><p>Acompanhe sua consistência e evolução.</p></div><div class="home-avatar"><span id="homeAvatar">V</span></div></div>
+    <div class="profile-picker"><label for="profile">PERFIL ATIVO</label><select id="profile"><option value="vini">Meu treino</option><option value="parceiro">Segundo perfil</option></select></div>
+    <div class="section-heading"><h3>Seu ritmo</h3><span class="subtle-label">ESTE MÊS</span></div>
+    <div class="dashboard-stats">
+      <article class="dashboard-stat stat-featured"><div class="stat-icon"><span>↗</span></div><span class="stat-label">Treinos realizados</span><strong id="homeMonthCount">0</strong><span class="stat-foot" id="homeMonthCaption">Comece registrando seu treino</span></article>
+      <article class="dashboard-stat"><div class="stat-icon"><span>◷</span></div><span class="stat-label">Últimos 7 dias</span><strong id="homeWeekCount">0</strong><span class="stat-foot">sessões concluídas</span></article>
     </div>
-    <p class="small">Crie suas próprias fichas e encontre alternativas quando um aparelho estiver ocupado.</p>
-  </div>
+    <article class="card progress-card"><div class="section-heading"><div><h3>Frequência</h3><p>Treinos nos últimos 7 dias</p></div><span class="trend-badge" id="homeFrequencyLabel">Vamos nessa</span></div><div id="homeFrequencyChart" class="frequency-chart" aria-label="Frequência de treinos nos últimos sete dias"></div><div id="homeFrequencyDays" class="frequency-days"></div></article>
+    <article class="next-workout-card"><div class="next-workout-top"><span class="next-workout-kicker">TEU PRÓXIMO TREINO</span><span class="next-workout-symbol">↗</span></div><h3 id="homeNextWorkout">Full Body A</h3><p id="homeNextDescription">Sua próxima sessão está pronta quando você estiver.</p><button id="homeStartWorkout" class="start-workout-btn">Começar treino <span>→</span></button></article>
+    <div class="section-heading recent-heading"><h3>Última atividade</h3><button class="text-button" id="homeSeeHistory">Ver histórico <span>→</span></button></div>
+    <div id="homeRecentActivity" class="recent-activity"></div>
+  </section>
 
-  <div class="tabs">
-    <button class="active" data-tab="workout">Treino</button>
-    <button class="secondary" data-tab="history">Histórico</button>
-    <button class="secondary" data-tab="settings">Ajustes e backup</button>
-  </div>
-
-  <section id="tab-workout">
-    <div class="row between">
-      <div><h2 id="workoutTitle">Full Body A</h2><p id="workoutSubtitle">Registre carga, reps e RIR.</p></div>
-      <button class="secondary" id="timerOpen">⏱ Descanso</button>
-    </div>
+  <section id="tab-workout" class="hidden">
+    <div class="workout-config card"><div class="workout-config-top"><div><p class="eyebrow">HORA DE TREINAR</p><h2 id="workoutTitle">Full Body A</h2></div><button class="secondary timer-button" id="timerOpen"><span>◷</span> Descanso</button></div><div><label for="session">ESCOLHER FICHA</label><select id="session"></select></div><p class="small">Registre carga, repetições e RIR em cada série.</p></div>
     <div id="exerciseList"></div>
     <div class="row topgap">
       <button class="secondary" id="addExercise">+ Exercício</button>
@@ -103,7 +146,12 @@
   </section>
 </div>
 
-<div class="footerbar"><button class="secondary" id="quickTimer">Iniciar descanso · 90s</button><button id="quickFinish">Concluir treino</button></div>
+<nav class="footerbar bottom-nav" id="bottomNav" aria-label="Navegação principal">
+  <button class="bottom-nav-btn active" data-tab="home" aria-label="Início"><span class="nav-icon">⌂</span><span>Início</span></button>
+  <button class="bottom-nav-btn" data-tab="workout" aria-label="Treino"><span class="nav-icon">▥</span><span>Treino</span></button>
+  <button class="bottom-nav-btn" data-tab="history" aria-label="Histórico"><span class="nav-icon">↗</span><span>Histórico</span></button>
+  <button class="bottom-nav-btn" data-tab="settings" aria-label="Ajustes"><span class="nav-icon">⚙</span><span>Ajustes</span></button>
+</nav>
 
 <div id="timerModal" class="hidden" style="position:fixed;inset:0;background:#000b;display:grid;place-items:center;padding:20px">
   <div class="card" style="width:min(420px,100%);margin:0">
@@ -226,12 +274,42 @@ function renderHistory(){
   div.append(details);el.append(div);
  });
 }
-function switchTab(tab){document.querySelectorAll('[id^="tab-"]').forEach(el=>el.classList.add('hidden'));document.getElementById('tab-'+tab).classList.remove('hidden');document.querySelectorAll('[data-tab]').forEach(b=>{b.classList.toggle('active',b.dataset.tab===tab);b.classList.toggle('secondary',b.dataset.tab!==tab)});if(tab==='history')renderHistory()}
+function renderHome(){
+ const rows=data.history.filter(h=>h.profile===currentProfile).slice().reverse();
+ const now=new Date(), month=now.getMonth(), year=now.getFullYear();
+ const parsedDate=h=>{if(h.timestamp)return new Date(h.timestamp);const raw=String(h.date||'');const m=raw.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);if(m)return new Date(Number(m[3]),Number(m[2])-1,Number(m[1]));const d=new Date(raw);return Number.isNaN(d.getTime())?null:d};
+ const dated=rows.map(h=>({h,date:parsedDate(h)}));
+ const monthRows=dated.filter(x=>x.date&&x.date.getMonth()===month&&x.date.getFullYear()===year);
+ const startOfToday=new Date(year,month,now.getDate());
+ const weekStart=new Date(startOfToday);weekStart.setDate(weekStart.getDate()-6);
+ const weekRows=dated.filter(x=>x.date&&x.date>=weekStart&&x.date<new Date(year,month,now.getDate()+1));
+ document.getElementById('homeMonthCount').textContent=monthRows.length;
+ document.getElementById('homeWeekCount').textContent=weekRows.length;
+ document.getElementById('homeMonthCaption').textContent=monthRows.length===0?'Seu próximo treino começa a contagem':monthRows.length===1?'Um passo de cada vez.':`${monthRows.length} sessões registradas neste mês`;
+ document.getElementById('homeFrequencyLabel').textContent=weekRows.length===0?'Hora de começar':weekRows.length===1?'Bom começo':`${weekRows.length} na semana`;
+ document.getElementById('homeAvatar').textContent=currentProfile==='vini'?'V':'2';
+ const p=data.profiles[currentProfile],nextId=p.next||'A';
+ document.getElementById('homeNextWorkout').textContent=planName(nextId);
+ document.getElementById('homeNextDescription').textContent=(p.plans[nextId]||[]).length?`${(p.plans[nextId]||[]).length} exercícios na ficha · no teu ritmo`:'Ficha pronta para personalizar';
+ const chart=document.getElementById('homeFrequencyChart'),days=document.getElementById('homeFrequencyDays');chart.innerHTML='';days.innerHTML='';
+ const labels=['dom','seg','ter','qua','qui','sex','sáb'];
+ const counts=[];
+ for(let offset=6;offset>=0;offset--){const d=new Date(startOfToday);d.setDate(d.getDate()-offset);const count=dated.filter(x=>x.date&&x.date.getFullYear()===d.getFullYear()&&x.date.getMonth()===d.getMonth()&&x.date.getDate()===d.getDate()).length;counts.push({d,count});}
+ const max=Math.max(1,...counts.map(x=>x.count));
+ counts.forEach(({d,count})=>{const col=document.createElement('div');col.className='frequency-column';const track=document.createElement('div');track.className='frequency-track';const fill=document.createElement('div');fill.className='frequency-fill'+(count?' has-workout':'');fill.style.height=count?`${Math.max(16,Math.round(count/max*100))}%`:'5%';fill.title=`${count} treino(s)`;track.append(fill);col.append(track);chart.append(col);const label=document.createElement('span');label.textContent=labels[d.getDay()];days.append(label)});
+ const recent=document.getElementById('homeRecentActivity');recent.innerHTML='';
+ const latest=rows.slice(0,3);
+ if(!latest.length){recent.innerHTML='<div class="recent-empty"><strong>Teu histórico começa aqui.</strong>Conclua um treino para ver suas atividades recentes e acompanhar a frequência por aqui.</div>';return}
+ latest.forEach(h=>{const row=document.createElement('div');row.className='recent-row';const ico=document.createElement('div');ico.className='recent-date-icon';ico.textContent='↗';const info=document.createElement('div');info.className='recent-row-info';const title=document.createElement('strong');title.textContent=h.sessionName||planName(h.session);const meta=document.createElement('span');meta.textContent=h.date||'Treino registrado';info.append(title,meta);const count=document.createElement('span');count.className='recent-row-count';count.textContent=`${(h.exercises||[]).length} exercícios`;row.append(ico,info,count);recent.append(row)});
+}
+function switchTab(tab){document.querySelectorAll('[id^="tab-"]').forEach(el=>el.classList.add('hidden'));const target=document.getElementById('tab-'+tab);if(target)target.classList.remove('hidden');document.querySelectorAll('.bottom-nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));if(tab==='history')renderHistory();if(tab==='home')renderHome();window.scrollTo({top:0,behavior:'smooth'})}
 function finishWorkout(){const ex=plan().map((e,i)=>({name:e.name,sets:(workout[i]?.sets||[]).map(s=>({...s}))}));data.history.push({date:new Date().toLocaleString('pt-BR'),profile:currentProfile,session:currentSession,sessionName:planName(),exercises:ex});const p=data.profiles[currentProfile],order=p.planOrder.filter(k=>p.plans[k]);p.next=order[(Math.max(0,order.indexOf(currentSession))+1)%order.length]||currentSession;save();currentSession=p.next;initWorkout();alert('Treino salvo! Próximo treino: '+planName());switchTab('history')}
-document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));
-document.getElementById('profile').onchange=e=>{currentProfile=e.target.value;currentSession=data.profiles[currentProfile].next;initWorkout()};
+document.querySelectorAll('.bottom-nav-btn').forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));
+document.getElementById('homeStartWorkout').onclick=()=>switchTab('workout');
+document.getElementById('homeSeeHistory').onclick=()=>switchTab('history');
+document.getElementById('profile').onchange=e=>{currentProfile=e.target.value;currentSession=data.profiles[currentProfile].next;initWorkout();renderHome();renderPlanManagement()};
 document.getElementById('session').onchange=e=>{currentSession=e.target.value;initWorkout()};
-document.getElementById('finishWorkout').onclick=finishWorkout;document.getElementById('quickFinish').onclick=finishWorkout;
+document.getElementById('finishWorkout').onclick=finishWorkout;
 document.getElementById('addExercise').onclick=()=>{switchTab('settings');document.getElementById('editSession').value=currentSession;document.getElementById('exerciseName').focus()};
 function renderPlanManagement(){
  const el=document.getElementById('planManagement'); if(!el)return; el.innerHTML='';
@@ -280,7 +358,7 @@ function openTimer(){modal.classList.remove('hidden');modal.style.display='grid'
 function closeTimer(){modal.classList.add('hidden');modal.style.display='none'}
 function updateTimerDisplay(){const m=Math.floor(timerRemaining/60),s=timerRemaining%60;document.getElementById('timerDisplay').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0')}
 function startTimer(sec=timerSeconds){clearInterval(timerInterval);timerSeconds=sec;timerRemaining=sec;timerRunning=true;updateTimerDisplay();timerInterval=setInterval(()=>{if(!timerRunning)return;if(timerRemaining>0){timerRemaining--;updateTimerDisplay()}else{clearInterval(timerInterval);timerRunning=false;document.getElementById('timerDisplay').textContent='00:00';if(navigator.vibrate)navigator.vibrate([200,100,200]);alert('Descanso finalizado! Bora pra próxima série 💪')}},1000);openTimer()}
-document.getElementById('timerOpen').onclick=openTimer;document.getElementById('quickTimer').onclick=()=>startTimer(90);document.getElementById('timerClose').onclick=closeTimer;
+document.getElementById('timerOpen').onclick=openTimer;document.getElementById('timerClose').onclick=closeTimer;
 document.querySelectorAll('[data-seconds]').forEach(b=>b.onclick=()=>startTimer(Number(b.dataset.seconds)));
 document.getElementById('timerPause').onclick=()=>{timerRunning=!timerRunning;document.getElementById('timerPause').textContent=timerRunning?'Pausar':'Continuar'};
 document.getElementById('timerReset').onclick=()=>startTimer(timerSeconds);
@@ -308,6 +386,7 @@ if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
 }
 initExerciseCatalog();
 initWorkout();
+renderHome();
 </script>
 </body>
 </html>
