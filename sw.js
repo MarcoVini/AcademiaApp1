@@ -1,5 +1,5 @@
-const CACHE_NAME = "treino-pwa-v14";
-const APP_FILES = ["./", "./index.html", "./manifest.json", "./assets/exercises/supino-reto.svg", "./assets/exercises/puxada-alta.svg", "./assets/exercises/elevacao-lateral.svg", "./assets/exercises/agachamento.svg", "./assets/exercises/rosca-direta.svg", "./assets/exercises/corrida.svg"];
+const CACHE_NAME = "treino-pwa-v13";
+const APP_FILES = ["./", "./index.html", "./manifest.json"];
 
 self.addEventListener("install", event => {
   event.waitUntil(
