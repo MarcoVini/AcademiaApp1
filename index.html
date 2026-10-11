@@ -29,7 +29,18 @@
 .historyexercise{padding:10px 0;border-top:1px solid #2b323d}.historyexercise:first-of-type{border-top:0}.historyexercise strong{display:block;font-size:14px;margin-bottom:6px}
 .setchips{display:flex;flex-wrap:wrap;gap:6px}.setchip{font-size:12px;padding:6px 8px;background:#0f1319;border:1px solid #2c3542;border-radius:8px;color:#d5deea}.setchip b{color:var(--accent);font-weight:750}
 .plan-management{display:grid;gap:8px;margin-top:12px}.plan-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;background:#101319;border:1px solid var(--border);border-radius:12px}.plan-row strong{display:block;font-size:13px}.plan-row small{color:var(--muted);font-size:11px}.plan-row button{padding:7px 9px;font-size:12px;flex-shrink:0}.catalog-results{margin-top:6px;border:1px solid var(--border);border-radius:12px;overflow-y:auto;max-height:260px;background:#101319}.catalog-option{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;border:0;border-radius:0;border-bottom:1px solid var(--border);background:transparent;color:var(--text);padding:11px 12px;text-align:left;font-weight:500}.catalog-option:last-child{border-bottom:0}.catalog-option:hover,.catalog-option:focus{background:#25331d;outline:none}.catalog-option.selected{background:#25331d;color:var(--accent)}.catalog-option small{font-size:11px;color:var(--muted);white-space:nowrap}.catalog-empty{padding:14px;color:var(--muted);font-size:13px}
-.alt-toggle{margin-top:10px;width:100%;text-align:left}.alternatives{margin-top:10px;padding:12px;background:#0f1319;border:1px solid #364151;border-radius:12px}.alternative{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 0;border-bottom:1px solid #29313d}.alternative:last-child{border-bottom:0}.historyempty{border:1px dashed #3a4554;border-radius:16px;padding:28px 18px;text-align:center;color:var(--muted)}.historyempty .emoji{font-size:30px;margin-bottom:8px}
+.alt-toggle{margin-top:10px;width:100%;text-align:left}
+    .alternative-backdrop{position:fixed;inset:0;z-index:1000;background:#0009;display:flex;align-items:flex-end;justify-content:center;opacity:0;transition:opacity .22s ease;padding-top:24px}
+    .alternative-backdrop:not(.hidden){opacity:1}
+    .alternative-sheet{width:min(680px,100%);max-height:88dvh;overflow:hidden;display:flex;flex-direction:column;background:#171a21;border:1px solid #39404d;border-bottom:0;border-radius:24px 24px 0 0;padding:10px 16px calc(18px + env(safe-area-inset-bottom));box-shadow:0 -18px 60px #0006;transform:translateY(24px);transition:transform .26s cubic-bezier(.2,.7,.2,1)}
+    .alternative-backdrop:not(.hidden) .alternative-sheet{transform:translateY(0)}
+    .sheet-grabber{width:42px;height:4px;border-radius:99px;background:#596171;margin:0 auto 13px;flex:0 0 auto}
+    .sheet-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}.sheet-header h2{margin:0;font-size:20px}.sheet-header p{font-size:12px;margin:4px 0 0}.sheet-close{flex:0 0 auto;padding:8px 11px}
+    .sheet-controls{display:grid;grid-template-columns:minmax(0,1fr) minmax(130px,.7fr);gap:8px;margin-bottom:10px}.sheet-controls input,.sheet-controls select{min-height:44px}
+    .sheet-results{overflow-y:auto;overscroll-behavior:contain;min-height:90px;padding-bottom:8px}.sheet-result{display:flex;align-items:center;gap:12px;width:100%;padding:12px 10px;text-align:left;background:transparent;color:var(--text);border:0;border-bottom:1px solid #2b303a;border-radius:0;transition:background-color .16s ease}.sheet-result:active,.sheet-result:focus-visible{background:#252d20;outline:0}.sheet-result-copy{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0}.sheet-result-copy strong{font-size:14px;overflow-wrap:anywhere}.sheet-result-copy small{font-size:11px;color:var(--muted);font-weight:500}.sheet-result-action{flex:0 0 auto;border:1px solid var(--line);background:var(--panel2);color:var(--accent);border-radius:10px;padding:8px 10px;font-size:12px}
+    .sheet-empty{padding:24px 12px;text-align:center;color:var(--muted);font-size:13px}.replace-review{background:#101319;border:1px solid #39404d;border-radius:16px;padding:16px;margin:8px 0 12px}.replace-review .replace-name{font-size:17px;font-weight:800;line-height:1.35;overflow-wrap:anywhere}.replace-arrow{color:var(--accent);font-size:20px;margin:8px 0}.replace-note{font-size:12px;line-height:1.5;margin-top:10px}.replace-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.replace-actions button{min-height:46px}.historyempty{border:1px dashed #3a4554;border-radius:16px;padding:28px 18px;text-align:center;color:var(--muted)}.historyempty .emoji{font-size:30px;margin-bottom:8px}
+    @media(max-width:420px){.alternative-sheet{padding-left:12px;padding-right:12px}.sheet-controls{grid-template-columns:1fr}.sheet-header h2{font-size:18px}.sheet-result{padding:12px 5px;gap:8px}}
+    @media(prefers-reduced-motion:reduce){.alternative-backdrop,.alternative-sheet,.sheet-result{transition:none!important}}
 @media(max-width:420px){.historystats{gap:6px}.statbox{padding:10px}.statbox strong{font-size:19px}.historyhead{padding:12px}.historytitle{font-size:16px}.historyactions{flex-direction:column}}.notice{background:#222b1b;border:1px solid #43532d;border-radius:12px;padding:11px;color:#dfffc2;font-size:13px}.timer{font-size:38px;font-weight:800;text-align:center;letter-spacing:1px;margin:10px}.empty{text-align:center;padding:24px 10px;color:var(--muted)}.topgap{margin-top:18px}
     @media(max-width:420px){.wrap{padding:12px 10px 100px}.card{padding:12px}.setline{grid-template-columns:28px 1fr 1fr 1fr 32px;gap:4px}.setline input{font-size:14px}.fields{gap:6px}h1{font-size:22px}}
 
@@ -202,6 +213,21 @@
   <button class="bottom-nav-btn" data-tab="settings" aria-label="Ajustes"><span class="nav-icon">⚙</span><span>Ajustes</span></button>
 </nav>
 
+<div id="alternativeBackdrop" class="alternative-backdrop hidden" aria-hidden="true">
+  <section id="alternativeSheet" class="alternative-sheet" role="dialog" aria-modal="true" aria-labelledby="alternativeSheetTitle">
+    <div class="sheet-grabber" aria-hidden="true"></div>
+    <div class="sheet-header"><div><h2 id="alternativeSheetTitle">Substituir exercício</h2><p id="alternativeSheetSubtitle">Escolha uma alternativa para este movimento.</p></div><button type="button" class="secondary sheet-close" id="alternativeSheetClose" aria-label="Fechar alternativas">✕</button></div>
+    <div id="alternativePickerView">
+      <div class="sheet-controls"><input id="alternativeSearch" type="search" autocomplete="off" placeholder="Buscar exercício..." aria-label="Buscar alternativa"><select id="alternativeCategory" aria-label="Filtrar alternativas por categoria"><option value="all">Todas as categorias</option></select></div>
+      <div id="alternativeResults" class="sheet-results" role="listbox" aria-label="Alternativas de exercícios"></div>
+    </div>
+    <div id="alternativeReviewView" class="hidden">
+      <div class="replace-review"><p class="small">EXERCÍCIO ATUAL</p><div id="replaceCurrentName" class="replace-name"></div><div class="replace-arrow">↓</div><p class="small">NOVA OPÇÃO</p><div id="replaceNextName" class="replace-name"></div><p class="replace-note">As séries, cargas, repetições, RIR e marcações já registradas serão preservadas. Só o nome do exercício será alterado na ficha.</p></div>
+      <div class="replace-actions"><button type="button" class="secondary" id="cancelAlternativeReplace">Voltar</button><button type="button" id="confirmAlternativeReplace">Confirmar troca</button></div>
+    </div>
+  </section>
+</div>
+
 <div id="timerModal" class="hidden" style="position:fixed;inset:0;background:#000b;display:grid;place-items:center;padding:20px">
   <div class="card" style="width:min(420px,100%);margin:0">
     <div class="row between"><h2>Descanso</h2><button class="secondary" id="timerClose">Fechar</button></div>
@@ -251,6 +277,41 @@ function getAlternatives(name){const n=name.toLowerCase().normalize('NFD').repla
 {keys:['rosca','biceps'],items:[['Rosca direta','Flexão de cotovelo · bíceps'],['Rosca martelo','Bíceps/braquial'],['Rosca inclinada com halteres','Flexão de cotovelo · bíceps']]},
 {keys:['panturrilha','gemeos'],items:[['Panturrilha em pé','Flexão plantar'],['Panturrilha sentada','Ênfase no sóleo'],['Panturrilha no leg press','Flexão plantar']]},
 {keys:['abdominal','prancha','core'],items:[['Crunch no solo','Flexão do tronco'],['Prancha','Estabilidade do tronco'],['Elevação de joelhos','Controle do tronco/pelve']]}];const g=groups.find(g=>g.keys.some(k=>n.includes(k.normalize('NFD').replace(/[\u0300-\u036f]/g,''))));return g?g.items.filter(x=>x[0].toLowerCase()!==name.toLowerCase()).slice(0,3):[]}
+let alternativeContext=null, alternativeSelected=null, alternativePreviousFocus=null;
+function openAlternativeSheet(index,currentName){
+ alternativeContext={index,currentName};alternativeSelected=null;alternativePreviousFocus=document.activeElement;
+ const backdrop=document.getElementById('alternativeBackdrop');
+ document.getElementById('alternativeSheetTitle').textContent='Substituir exercício';
+ document.getElementById('alternativeSheetSubtitle').textContent='Alternativas para '+currentName;
+ document.getElementById('alternativeSearch').value='';document.getElementById('alternativeCategory').value='all';
+ document.getElementById('alternativePickerView').classList.remove('hidden');document.getElementById('alternativeReviewView').classList.add('hidden');
+ renderAlternativeResults();backdrop.classList.remove('hidden');backdrop.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';
+ setTimeout(()=>document.getElementById('alternativeSearch').focus(),80);
+}
+function closeAlternativeSheet(){const backdrop=document.getElementById('alternativeBackdrop');backdrop.classList.add('hidden');backdrop.setAttribute('aria-hidden','true');document.body.style.overflow='';alternativeContext=null;alternativeSelected=null;if(alternativePreviousFocus&&alternativePreviousFocus.focus)alternativePreviousFocus.focus();}
+function renderAlternativeResults(){
+ const results=document.getElementById('alternativeResults'),query=normalizeText(document.getElementById('alternativeSearch').value),category=document.getElementById('alternativeCategory').value;
+ results.innerHTML='';
+ const suggestions=alternativeContext?getAlternatives(alternativeContext.currentName):[];
+ const suggestionNames=new Set(suggestions.map(x=>x[0]));
+ let items;
+ if(!query&&category==='all'&&suggestions.length){items=suggestions.map(([name,desc])=>({name,desc,group:'Recomendado'}));}
+ else {items=EXERCISE_CATALOG.filter(([group,name])=>(category==='all'||group===category)&&normalizeText(name).includes(query)).map(([group,name])=>({name,desc:group,group}));
+  // Keep curated recommendations discoverable when category is unfiltered and the query matches them.
+  if(category==='all')suggestions.forEach(([name,desc])=>{if(normalizeText(name).includes(query)&&!items.some(x=>x.name===name))items.unshift({name,desc,group:'Recomendado'})});
+ }
+ items=items.filter(item=>!alternativeContext||normalizeText(item.name)!==normalizeText(alternativeContext.currentName));
+ if(!items.length){const empty=document.createElement('div');empty.className='sheet-empty';empty.textContent='Nenhum exercício encontrado. Tente outro termo ou categoria.';results.append(empty);return}
+ items.forEach(item=>{const button=document.createElement('button');button.type='button';button.className='sheet-result';button.setAttribute('role','option');const copy=document.createElement('span');copy.className='sheet-result-copy';const name=document.createElement('strong');name.textContent=item.name;const detail=document.createElement('small');detail.textContent=item.desc;copy.append(name,detail);const action=document.createElement('span');action.className='sheet-result-action';action.textContent='Selecionar';button.append(copy,action);button.onclick=()=>reviewAlternative(item.name);results.append(button)});
+}
+function reviewAlternative(name){alternativeSelected=name;document.getElementById('replaceCurrentName').textContent=alternativeContext.currentName;document.getElementById('replaceNextName').textContent=name;document.getElementById('alternativePickerView').classList.add('hidden');document.getElementById('alternativeReviewView').classList.remove('hidden');document.getElementById('alternativeSheetSubtitle').textContent='Confira antes de confirmar a troca.';document.getElementById('confirmAlternativeReplace').focus()}
+function cancelAlternativeReview(){alternativeSelected=null;document.getElementById('alternativeReviewView').classList.add('hidden');document.getElementById('alternativePickerView').classList.remove('hidden');document.getElementById('alternativeSheetSubtitle').textContent='Alternativas para '+(alternativeContext?.currentName||'este exercício');document.getElementById('alternativeSearch').focus()}
+function confirmAlternativeReplacement(){if(!alternativeContext||!alternativeSelected)return;const {index,currentName}=alternativeContext;const exercises=plan();if(!exercises[index]||exercises[index].name!==currentName){closeAlternativeSheet();return}exercises[index].name=alternativeSelected;save();openExerciseIndex=index;closeAlternativeSheet();renderWorkout()}
+const alternativeCategory=document.getElementById('alternativeCategory');
+[...new Set(EXERCISE_CATALOG.map(x=>x[0]))].sort((a,b)=>a.localeCompare(b,'pt-BR')).forEach(name=>{const option=document.createElement('option');option.value=name;option.textContent=name;alternativeCategory.append(option)});
+document.getElementById('alternativeSearch').addEventListener('input',renderAlternativeResults);alternativeCategory.addEventListener('change',renderAlternativeResults);
+document.getElementById('alternativeSheetClose').onclick=closeAlternativeSheet;document.getElementById('cancelAlternativeReplace').onclick=cancelAlternativeReview;document.getElementById('confirmAlternativeReplace').onclick=confirmAlternativeReplacement;
+document.getElementById('alternativeBackdrop').addEventListener('click',e=>{if(e.target===e.currentTarget)closeAlternativeSheet()});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!document.getElementById('alternativeBackdrop').classList.contains('hidden'))closeAlternativeSheet()});
 function renderWorkout(){
  document.getElementById('workoutTitle').textContent=planName();
  document.getElementById('session').value=currentSession;
@@ -276,7 +337,7 @@ function renderWorkout(){
   head.append(toggle,done);box.append(head);
   const bodyWrap=document.createElement('div');bodyWrap.className='exercise-body-wrap';bodyWrap.id='exercise-body-'+i;bodyWrap.setAttribute('aria-hidden',String(!expanded));bodyWrap.inert=!expanded;
   const body=document.createElement('div');body.className='exercise-body';
-  const altBtn=document.createElement('button');altBtn.type='button';altBtn.className='secondary alt-toggle';altBtn.textContent='↔ Alternativas para este exercício';altBtn.onclick=()=>{const old=body.querySelector('.alternatives');if(old){old.remove();altBtn.textContent='↔ Alternativas para este exercício';return}const panel=document.createElement('div');panel.className='alternatives';const note=document.createElement('p');note.className='small';note.textContent='Sugestões por semelhança de movimento ou músculos trabalhados. A equivalência não é perfeita; escolha apenas exercícios que saiba executar com segurança.';panel.append(note);const items=getAlternatives(ex.name);if(!items.length){const p=document.createElement('p');p.textContent='Ainda não há sugestões automáticas para este exercício.';panel.append(p)}items.forEach(item=>{const row=document.createElement('div');row.className='alternative';const info=document.createElement('div');const strong=document.createElement('strong');strong.textContent=item[0];const small=document.createElement('small');small.textContent=item[1];info.append(strong,small);const use=document.createElement('button');use.className='secondary';use.textContent='Usar';use.onclick=()=>{if(confirm('Trocar '+ex.name+' por '+item[0]+' nesta ficha?')){data.profiles[currentProfile].plans[currentSession][i].name=item[0];save();initWorkout()}};row.append(info,use);panel.append(row)});body.append(panel);altBtn.textContent='Ocultar alternativas'};body.append(altBtn);
+  const altBtn=document.createElement('button');altBtn.type='button';altBtn.className='secondary alt-toggle';altBtn.textContent='↔ Encontrar alternativa';altBtn.onclick=()=>openAlternativeSheet(i,ex.name);body.append(altBtn);
   const labels=document.createElement('div');labels.className='setline small';labels.innerHTML='<span>Série</span><span style="text-align:center">Kg</span><span style="text-align:center">Reps</span><span style="text-align:center">RIR</span><span></span>';body.append(labels);
   sets.forEach((s,j)=>{
    const row=document.createElement('div');row.className='setline';

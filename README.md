@@ -64,3 +64,12 @@ Versão v6: exclusão de fichas personalizadas (A/B protegidas, histórico concl
 - Animações curtas de expansão, troca de tela e abertura do painel de adição, respeitando a preferência do sistema por movimento reduzido.
 - O cache do service worker foi atualizado para `treino-pwa-v9`.
 - A sintaxe JavaScript e a integridade do ZIP foram verificadas. O teste visual automatizado do navegador não concluiu neste ambiente; teste as interações no aparelho após publicar.
+
+
+## Redesign v10 — substituição de exercícios
+- As alternativas abrem em um painel inferior, sem ocupar espaço permanente dentro do cartão do exercício.
+- Inclui busca no catálogo e filtro por categoria; sem busca, mostra primeiro as sugestões relacionadas ao movimento atual.
+- Antes da troca, apresenta uma etapa de revisão com o exercício atual e o novo exercício.
+- A troca altera somente o nome na ficha e preserva as séries preenchidas, cargas, repetições, RIR e marcações do treino atual.
+- O painel pode ser fechado pelo botão, tocando no fundo ou pressionando Escape; respeita a preferência por movimento reduzido.
+- Cache atualizado para `treino-pwa-v10`.
