@@ -15,7 +15,21 @@
     input,select,textarea{width:100%;background:#0e1116;color:var(--text);border:1px solid var(--line);border-radius:10px;padding:10px;min-width:0}
     label{display:block;color:var(--muted);font-size:12px;margin-bottom:5px}.wrap{max-width:760px;margin:auto;padding:16px 14px 100px}
     header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:8px 0 18px}h1{font-size:25px;margin:0;letter-spacing:-.6px}h2{font-size:18px;margin:0 0 12px}p{margin:6px 0;color:var(--muted)}.pill{font-size:12px;color:var(--accent);border:1px solid #43532d;border-radius:999px;padding:5px 9px}
-    .card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:15px;margin:12px 0}.row{display:flex;gap:10px;align-items:center}.row>*{flex:1}.between{justify-content:space-between}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.small{font-size:12px;color:var(--muted)}.tabs{display:flex;gap:8px;overflow:auto;margin-bottom:14px}.tabs button{white-space:nowrap}.tabs button.active{background:var(--accent);color:#10130b}.exercise{border:1px solid var(--line);border-radius:15px;padding:13px;margin:10px 0;background:#12151b}.exercise h3{margin:0 0 10px;font-size:16px}.fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.setline{display:grid;grid-template-columns:42px 1fr 1fr 1fr 36px;gap:6px;align-items:center;margin:7px 0}.setline input{padding:8px 5px;text-align:center}.setnum{color:var(--muted);text-align:center;font-size:13px}.iconbtn{padding:8px;background:var(--panel2);color:var(--text);border:1px solid var(--line)}.done{outline:2px solid #8bc34a}.done .donebtn{background:#2b3a20;color:#d9ffb2}.footerbar{position:fixed;bottom:0;left:0;right:0;background:#101217ee;backdrop-filter:blur(14px);border-top:1px solid var(--line);padding:10px max(14px,env(safe-area-inset-right)) calc(10px + env(safe-area-inset-bottom));display:flex;gap:8px;justify-content:center}.footerbar button{max-width:240px;flex:1}.hidden{display:none!important}.historyitem{padding:12px 0;border-bottom:1px solid var(--line)}.notice{background:#222b1b;border:1px solid #43532d;border-radius:12px;padding:11px;color:#dfffc2;font-size:13px}.timer{font-size:38px;font-weight:800;text-align:center;letter-spacing:1px;margin:10px}.empty{text-align:center;padding:24px 10px;color:var(--muted)}.topgap{margin-top:18px}
+    .card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:15px;margin:12px 0}.row{display:flex;gap:10px;align-items:center}.row>*{flex:1}.between{justify-content:space-between}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.small{font-size:12px;color:var(--muted)}.tabs{display:flex;gap:8px;overflow:auto;margin-bottom:14px}.tabs button{white-space:nowrap}.tabs button.active{background:var(--accent);color:#10130b}.exercise{border:1px solid var(--line);border-radius:15px;padding:13px;margin:10px 0;background:#12151b}.exercise h3{margin:0 0 10px;font-size:16px}.fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.setline{display:grid;grid-template-columns:42px 1fr 1fr 1fr 36px;gap:6px;align-items:center;margin:7px 0}.setline input{padding:8px 5px;text-align:center}.setnum{color:var(--muted);text-align:center;font-size:13px}.iconbtn{padding:8px;background:var(--panel2);color:var(--text);border:1px solid var(--line)}.done{outline:2px solid #8bc34a}.done .donebtn{background:#2b3a20;color:#d9ffb2}.footerbar{position:fixed;bottom:0;left:0;right:0;background:#101217ee;backdrop-filter:blur(14px);border-top:1px solid var(--line);padding:10px max(14px,env(safe-area-inset-right)) calc(10px + env(safe-area-inset-bottom));display:flex;gap:8px;justify-content:center}.footerbar button{max-width:240px;flex:1}.hidden{display:none!important}
+.historytoolbar{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 14px}
+.historystats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:12px 0 16px}
+.statbox{background:linear-gradient(145deg,#202832,#171b22);border:1px solid #303b49;border-radius:14px;padding:12px}
+.statbox strong{display:block;font-size:22px;letter-spacing:-.5px;color:var(--accent)}.statbox span{font-size:11px;color:var(--muted)}
+.historyitem{background:linear-gradient(145deg,#1a2029,#151920);border:1px solid #303744;border-radius:17px;margin:12px 0;overflow:hidden}
+.historyhead{padding:15px;display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.historydate{font-size:12px;color:var(--muted);margin-bottom:4px}.historytitle{font-size:18px;font-weight:800;letter-spacing:-.3px}
+.historychips{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}.historychip{font-size:11px;border:1px solid #3a4655;background:#222b36;color:#dce5ef;padding:4px 8px;border-radius:999px}
+.historychip.accent{color:var(--accent);border-color:#43532d;background:#252f1d}.historyactions{display:flex;gap:6px;flex-shrink:0}.historyactions button{padding:7px 9px;font-size:12px}
+.historydetails{border-top:1px solid #303744;padding:4px 14px 14px}.historydetails summary{cursor:pointer;color:#c7d1df;font-size:13px;padding:10px 0;user-select:none}
+.historyexercise{padding:10px 0;border-top:1px solid #2b323d}.historyexercise:first-of-type{border-top:0}.historyexercise strong{display:block;font-size:14px;margin-bottom:6px}
+.setchips{display:flex;flex-wrap:wrap;gap:6px}.setchip{font-size:12px;padding:6px 8px;background:#0f1319;border:1px solid #2c3542;border-radius:8px;color:#d5deea}.setchip b{color:var(--accent);font-weight:750}
+.historyempty{border:1px dashed #3a4554;border-radius:16px;padding:28px 18px;text-align:center;color:var(--muted)}.historyempty .emoji{font-size:30px;margin-bottom:8px}
+@media(max-width:420px){.historystats{gap:6px}.statbox{padding:10px}.statbox strong{font-size:19px}.historyhead{padding:12px}.historytitle{font-size:16px}.historyactions{flex-direction:column}}.notice{background:#222b1b;border:1px solid #43532d;border-radius:12px;padding:11px;color:#dfffc2;font-size:13px}.timer{font-size:38px;font-weight:800;text-align:center;letter-spacing:1px;margin:10px}.empty{text-align:center;padding:24px 10px;color:var(--muted)}.topgap{margin-top:18px}
     @media(max-width:420px){.wrap{padding:12px 10px 100px}.card{padding:12px}.setline{grid-template-columns:28px 1fr 1fr 1fr 32px;gap:4px}.setline input{font-size:14px}.fields{gap:6px}h1{font-size:22px}}
   </style>
 </head>
@@ -54,7 +68,11 @@
   </section>
 
   <section id="tab-history" class="hidden">
-    <h2>Histórico de treinos</h2>
+    <div class="row between">
+      <div><h2>Seu progresso</h2><p class="small">Cada sessão, organizada e fácil de consultar.</p></div>
+      <span class="pill" id="historyProfile">Meu treino</span>
+    </div>
+    <div id="historyStats" class="historystats"></div>
     <div id="historyList"></div>
   </section>
 
@@ -129,8 +147,51 @@ function renderWorkout(){
   foot.append(add,remove);box.append(foot);list.append(box);
  });
 }
-function renderHistory(){const el=document.getElementById('historyList');el.innerHTML='';const rows=data.history.filter(h=>h.profile===currentProfile);if(!rows.length){el.innerHTML='<div class="empty">Ainda não há treinos salvos. Conclua seu primeiro treino para ver o histórico aqui.</div>';return}
- rows.slice().reverse().forEach((h,idx)=>{const div=document.createElement('div');div.className='historyitem';const title=document.createElement('strong');title.textContent=`${h.date} · Full Body ${h.session}`;const summary=document.createElement('p');summary.textContent=h.exercises.map(e=>`${e.name}: ${e.sets.filter(s=>s.weight||s.reps).map(s=>`${s.weight||'—'}kg × ${s.reps||'—'} (RIR ${s.rir})`).join(', ')||'sem registro'}`).join(' | ');div.append(title,summary);el.append(div)})}
+function renderHistory(){
+ const el=document.getElementById('historyList'), stats=document.getElementById('historyStats');
+ el.innerHTML=''; stats.innerHTML='';
+ const rows=data.history.map((h,index)=>({...h,_index:index})).filter(h=>h.profile===currentProfile).reverse();
+ document.getElementById('historyProfile').textContent=currentProfile==='vini'?'Meu treino':'Segundo perfil';
+ const totalSets=rows.reduce((sum,h)=>sum+(h.exercises||[]).reduce((n,e)=>n+(e.sets||[]).length,0),0);
+ const totalExercises=rows.reduce((sum,h)=>sum+(h.exercises||[]).length,0);
+ [[rows.length,'Treinos salvos'],[totalExercises,'Exercícios registrados'],[totalSets,'Séries acompanhadas']].forEach(([value,label])=>{
+  const box=document.createElement('div');box.className='statbox';
+  const strong=document.createElement('strong');strong.textContent=value;
+  const span=document.createElement('span');span.textContent=label;
+  box.append(strong,span);stats.append(box);
+ });
+ if(!rows.length){
+  el.innerHTML='<div class="historyempty"><div class="emoji">📈</div><strong>Nenhum treino por aqui ainda</strong><p>Conclua seu próximo treino e ele aparecerá organizado nesta tela.</p></div>';return;
+ }
+ rows.forEach((h,displayIndex)=>{
+  const div=document.createElement('article');div.className='historyitem';
+  const head=document.createElement('div');head.className='historyhead';
+  const info=document.createElement('div');
+  const date=document.createElement('div');date.className='historydate';date.textContent=h.date||'Data não informada';
+  const title=document.createElement('div');title.className='historytitle';title.textContent='Full Body '+(h.session||'?');
+  const chips=document.createElement('div');chips.className='historychips';
+  const exerciseCount=(h.exercises||[]).length;
+  const setCount=(h.exercises||[]).reduce((sum,e)=>sum+(e.sets||[]).length,0);
+  [[`🏋️ ${exerciseCount} exercícios`,false],[`▦ ${setCount} séries`,false],[`#${rows.length-displayIndex}`,true]].forEach(([txt,accent])=>{const chip=document.createElement('span');chip.className='historychip'+(accent?' accent':'');chip.textContent=txt;chips.append(chip)});
+  info.append(date,title,chips);
+  const actions=document.createElement('div');actions.className='historyactions';
+  const del=document.createElement('button');del.className='danger';del.textContent='Excluir';del.setAttribute('aria-label','Excluir treino de '+(h.date||'data desconhecida'));
+  del.onclick=()=>{if(confirm(`Excluir este treino (${h.date||'data desconhecida'} · Full Body ${h.session})? Essa ação não pode ser desfeita. Seus outros treinos serão mantidos.`)){data.history.splice(h._index,1);save();renderHistory()}};
+  actions.append(del);head.append(info,actions);div.append(head);
+  const details=document.createElement('details');details.className='historydetails';
+  const summary=document.createElement('summary');summary.textContent='Ver exercícios e cargas';details.append(summary);
+  (h.exercises||[]).forEach(ex=>{
+   const exercise=document.createElement('div');exercise.className='historyexercise';
+   const name=document.createElement('strong');name.textContent=ex.name;
+   const sets=document.createElement('div');sets.className='setchips';
+   const recorded=(ex.sets||[]).filter(s=>s.weight!==''||s.reps!=='');
+   if(!recorded.length){const chip=document.createElement('span');chip.className='setchip';chip.textContent='Sem carga ou repetições registradas';sets.append(chip)}
+   else recorded.forEach((s,i)=>{const chip=document.createElement('span');chip.className='setchip';const weight=s.weight!==''?`${s.weight} kg`:'— kg';const reps=s.reps!==''?`${s.reps} reps`:'— reps';chip.innerHTML=`S${i+1} · <b>${weight}</b> × ${reps} · RIR ${s.rir||'—'}`;sets.append(chip)});
+   exercise.append(name,sets);details.append(exercise);
+  });
+  div.append(details);el.append(div);
+ });
+}
 function switchTab(tab){document.querySelectorAll('[id^="tab-"]').forEach(el=>el.classList.add('hidden'));document.getElementById('tab-'+tab).classList.remove('hidden');document.querySelectorAll('[data-tab]').forEach(b=>{b.classList.toggle('active',b.dataset.tab===tab);b.classList.toggle('secondary',b.dataset.tab!==tab)});if(tab==='history')renderHistory()}
 function finishWorkout(){const ex=plan().map((e,i)=>({name:e.name,sets:(workout[i]?.sets||[]).map(s=>({...s}))}));data.history.push({date:new Date().toLocaleString('pt-BR'),profile:currentProfile,session:currentSession,exercises:ex});data.profiles[currentProfile].next=currentSession==='A'?'B':'A';save();currentSession=data.profiles[currentProfile].next;initWorkout();alert('Treino salvo! Próximo treino: Full Body '+currentSession);switchTab('history')}
 document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));
