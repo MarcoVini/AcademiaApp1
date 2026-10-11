@@ -44,3 +44,6 @@ O service worker foi atualizado para a versão `treino-pwa-v2`. Depois de public
 
 ## Catálogo de exercícios
 O formulário de exercícios agora inclui catálogo local pesquisável, filtro por grupo muscular e opção explícita de cadastrar um nome personalizado quando não encontrar um exercício. O catálogo funciona sem internet e sem serviços externos.
+
+
+Novidades: gerenciamento de fichas personalizadas (exclusão com confirmação, sem apagar histórico concluído) e catálogo de exercícios com busca integrada à lista de opções. Fichas padrão A/B não podem ser excluídas.
