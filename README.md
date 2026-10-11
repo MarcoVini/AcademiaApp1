@@ -55,3 +55,12 @@ Versão v6: exclusão de fichas personalizadas (A/B protegidas, histórico concl
 - Tema dark modernizado com verde-lima como destaque e componentes mais espaçados.
 - Mantém os dados locais, as fichas A/B e personalizadas, catálogo, timer, histórico e backup.
 - Ao publicar esta versão, substitua os arquivos da raiz do repositório pelo conteúdo desta pasta. Faça backup dos dados antes de atualizar.
+
+
+## Redesign v9 — cartões recolhíveis e transições
+- Os exercícios aparecem em cartões recolhíveis; o primeiro começa aberto e os demais ficam compactos.
+- O resumo mostra quantidade de séries, séries concluídas e a última carga/repetição preenchida no treino atual.
+- Abrir outro exercício recolhe o anterior; é possível deixar todos recolhidos.
+- Animações curtas de expansão, troca de tela e abertura do painel de adição, respeitando a preferência do sistema por movimento reduzido.
+- O cache do service worker foi atualizado para `treino-pwa-v9`.
+- A sintaxe JavaScript e a integridade do ZIP foram verificadas. O teste visual automatizado do navegador não concluiu neste ambiente; teste as interações no aparelho após publicar.

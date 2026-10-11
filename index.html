@@ -84,6 +84,38 @@
     .exercise-editor{padding:0}.editor-description{font-size:13px;margin:0 0 12px}.custom-toggle{display:flex;align-items:center;gap:8px;font-size:13px!important;color:var(--text)!important}.custom-toggle input{accent-color:var(--accent)}
     .settings-intro{font-size:13px;margin:-5px 0 14px}.settings-accordion{background:var(--panel);border:1px solid var(--line);border-radius:16px;margin:10px 0;overflow:hidden}.settings-accordion>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:12px;padding:15px;min-height:72px}.settings-accordion>summary::-webkit-details-marker{display:none}.settings-summary-icon{width:38px;height:38px;flex:0 0 38px;display:grid;place-items:center;border-radius:12px;background:var(--panel2);color:var(--accent);font-size:21px;font-weight:800}.settings-summary-copy{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0}.settings-summary-copy strong{font-size:14px}.settings-summary-copy small{font-size:11px;color:var(--muted)}.summary-chevron{font-size:21px;color:var(--muted);transition:transform .18s}.settings-accordion[open] .summary-chevron{transform:rotate(180deg)}.settings-content{padding:0 15px 16px;border-top:1px solid var(--line)}.settings-content>.exercise-editor{padding-top:14px}.settings-content .plan-management{padding-top:2px}.settings-content .row{align-items:end}.settings-content .row button{min-height:42px}
 
+
+    /* v9: collapsible exercise cards and restrained motion */
+    .exercise-accordion{padding:0;overflow:hidden;transition:border-color .22s ease,background-color .22s ease,box-shadow .22s ease}
+    .exercise-accordion.is-expanded{border-color:#3a4930;box-shadow:0 7px 20px #0002}
+    .exercise-heading{display:flex;align-items:center;gap:8px;padding:12px;min-width:0}
+    .exercise-expand{display:flex;align-items:center;gap:10px;flex:1;min-width:0;padding:3px 0;background:transparent;color:var(--text);text-align:left;border-radius:8px}
+    .exercise-title-wrap{display:flex;flex-direction:column;gap:4px;min-width:0;flex:1}
+    .exercise-title{font-size:15px;line-height:1.3;overflow-wrap:anywhere}
+    .exercise-summary{font-size:11px;line-height:1.35;color:var(--muted);font-weight:500;overflow-wrap:anywhere}
+    .exercise-chevron{flex:0 0 auto;color:var(--muted);font-size:23px;line-height:1;transform:rotate(0);transition:transform .22s cubic-bezier(.2,.7,.2,1),color .22s ease}
+    .exercise-accordion.is-expanded .exercise-chevron{transform:rotate(180deg);color:var(--accent)}
+    .exercise-heading .donebtn{flex:0 0 auto;max-width:118px;padding:9px 10px;font-size:12px;white-space:normal}
+    .exercise-body-wrap{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows .25s cubic-bezier(.2,.7,.2,1),opacity .18s ease}
+    .exercise-accordion.is-expanded .exercise-body-wrap{grid-template-rows:1fr;opacity:1}
+    .exercise-body{min-height:0;overflow:hidden;padding:0 12px 0;transition:padding .25s ease}
+    .exercise-accordion.is-expanded .exercise-body{padding:0 12px 13px}
+    .exercise-body-wrap[aria-hidden="true"] .exercise-body{pointer-events:none}
+    .exercise-body .setline{grid-template-columns:28px minmax(0,1fr) minmax(0,1fr) minmax(0,1fr) 34px;gap:5px}
+    .exercise-body .setline input{min-width:0;width:100%;padding:9px 3px;text-align:center}
+    .exercise-body .exercise-actions>*{min-width:0;flex:1}
+    .exercise-body .alt-toggle{margin-top:8px}
+    .screen-enter{animation:screenEnter .22s cubic-bezier(.2,.7,.2,1) both}
+    @keyframes screenEnter{from{opacity:.72;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+    .quick-add-panel:not(.hidden){animation:panelEnter .22s cubic-bezier(.2,.7,.2,1) both}
+    @keyframes panelEnter{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
+    .settings-accordion .settings-content{animation:settingsEnter .2s ease both}
+    @keyframes settingsEnter{from{opacity:.55;transform:translateY(-3px)}to{opacity:1;transform:translateY(0)}}
+    button{transition:filter .16s ease,transform .16s ease,background-color .18s ease}
+    button:active{transform:scale(.985)}
+    @media(max-width:420px){.exercise-heading{padding:11px 10px;gap:6px}.exercise-title{font-size:14px}.exercise-summary{font-size:10px}.exercise-heading .donebtn{max-width:94px;padding:8px 7px;font-size:11px}.exercise-body{padding-left:10px;padding-right:10px}.exercise-accordion.is-expanded .exercise-body{padding-left:10px;padding-right:10px}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
   </style>
 </head>
 <body>
@@ -201,13 +233,13 @@ const defaults={
     parceiro:{next:'A',plans:{A:[{name:'Adicionar exercício',sets:3}],B:[{name:'Adicionar exercício',sets:3}]}}
   }, history:[]
 };
-let data=load(), currentProfile='vini', currentSession='A', workout={}, timerSeconds=90, timerRemaining=90, timerInterval=null, timerRunning=false, editIndex=null;
+let data=load(), currentProfile='vini', currentSession='A', workout={}, openExerciseIndex=0, timerSeconds=90, timerRemaining=90, timerInterval=null, timerRunning=false, editIndex=null;
 function load(){try{const d=JSON.parse(localStorage.getItem(KEY))||JSON.parse(JSON.stringify(defaults));Object.keys(d.profiles||{}).forEach(id=>{const p=d.profiles[id];p.planNames=p.planNames||{A:'Full Body A',B:'Full Body B'};p.planOrder=Array.isArray(p.planOrder)?p.planOrder:Object.keys(p.plans||{});Object.keys(p.plans||{}).forEach(k=>{if(!p.planNames[k])p.planNames[k]=(k==='A'||k==='B')?'Full Body '+k:'Treino personalizado';if(!p.planOrder.includes(k))p.planOrder.push(k)});if(!p.plans[p.next])p.next=p.planOrder[0]||'A'});return d}catch(e){const d=JSON.parse(JSON.stringify(defaults));Object.values(d.profiles).forEach(p=>{p.planNames={A:'Full Body A',B:'Full Body B'};p.planOrder=['A','B']});return d}}
 function save(){localStorage.setItem(KEY,JSON.stringify(data));document.getElementById('saveStatus').textContent='Salvo ✓'}
 function plan(){return data.profiles[currentProfile].plans[currentSession]||[]}
 function planName(id=currentSession){const p=data.profiles[currentProfile];return p.planNames?.[id]||('Treino '+id)}
 function refreshPlanSelectors(){const p=data.profiles[currentProfile];['session','editSession'].forEach(id=>{const sel=document.getElementById(id),prev=sel.value;sel.innerHTML='';p.planOrder.forEach(k=>{if(!p.plans[k])return;const o=document.createElement('option');o.value=k;o.textContent=planName(k);sel.append(o)});sel.value=p.plans[prev]?prev:(p.plans[currentSession]?currentSession:(p.planOrder[0]||'A'))})}
-function initWorkout(){refreshPlanSelectors();workout={};plan().forEach((ex,i)=>{workout[i]={sets:Array.from({length:ex.sets||3},()=>({weight:'',reps:'',rir:'2',done:false}))}});renderWorkout()}
+function initWorkout(){refreshPlanSelectors();workout={};openExerciseIndex=0;plan().forEach((ex,i)=>{workout[i]={sets:Array.from({length:ex.sets||3},()=>({weight:'',reps:'',rir:'2',done:false}))}});renderWorkout()}
 function getAlternatives(name){const n=name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');const groups=[
 {keys:['supino','peck deck','crucifixo','voador','chest press'],items:[['Supino com halteres','Empurrar horizontal · peito/tríceps'],['Flexão de braços','Empurrar horizontal · peso corporal'],['Crucifixo na máquina','Isolamento de peitoral']]},
 {keys:['puxada','pulldown','barra fixa'],items:[['Puxada na frente','Puxada vertical · dorsais'],['Barra fixa assistida','Puxada vertical · dorsais/bíceps'],['Pulldown com braço reto','Ênfase em dorsais']]},
@@ -223,27 +255,41 @@ function renderWorkout(){
  document.getElementById('workoutTitle').textContent=planName();
  document.getElementById('session').value=currentSession;
  document.getElementById('profile').value=currentProfile;
- const list=document.getElementById('exerciseList');list.innerHTML='';if(!plan().length){list.innerHTML='<div class="historyempty"><strong>Ficha vazia</strong><p>Toque em + Exercício para adicionar movimentos a esta ficha.</p></div>'}
+ const list=document.getElementById('exerciseList');list.innerHTML='';
+ if(!plan().length){list.innerHTML='<div class="historyempty"><strong>Ficha vazia</strong><p>Toque em + Exercício para adicionar movimentos a esta ficha.</p></div>';return}
  plan().forEach((ex,i)=>{
-  if(!workout[i])workout[i]={sets:Array.from({length:ex.sets},()=>({weight:'',reps:'',rir:'2',done:false}))};
-  const box=document.createElement('div');box.className='exercise'+(workout[i].sets.every(s=>s.done)?' done':'');
-  const head=document.createElement('div');head.className='row between';
-  const title=document.createElement('h3');title.textContent=(i+1)+'. '+ex.name;
-  const done=document.createElement('button');done.className='iconbtn donebtn';done.textContent=workout[i].sets.every(s=>s.done)?'✓ Feito':'Marcar feito';done.onclick=()=>{const val=!workout[i].sets.every(s=>s.done);workout[i].sets.forEach(s=>s.done=val);renderWorkout()};
-  head.append(title,done);box.append(head);const altBtn=document.createElement('button');altBtn.className='secondary alt-toggle';altBtn.textContent='↔ Alternativas para este exercício';altBtn.onclick=()=>{const old=box.querySelector('.alternatives');if(old){old.remove();altBtn.textContent='↔ Alternativas para este exercício';return}const panel=document.createElement('div');panel.className='alternatives';const note=document.createElement('p');note.className='small';note.textContent='Sugestões por semelhança de movimento ou músculos trabalhados. A equivalência não é perfeita; escolha apenas exercícios que saiba executar com segurança.';panel.append(note);const items=getAlternatives(ex.name);if(!items.length){const p=document.createElement('p');p.textContent='Ainda não há sugestões automáticas para este exercício.';panel.append(p)}items.forEach(item=>{const row=document.createElement('div');row.className='alternative';const info=document.createElement('div');const strong=document.createElement('strong');strong.textContent=item[0];const small=document.createElement('small');small.textContent=item[1];info.append(strong,small);const use=document.createElement('button');use.className='secondary';use.textContent='Usar';use.onclick=()=>{if(confirm('Trocar '+ex.name+' por '+item[0]+' nesta ficha?')){data.profiles[currentProfile].plans[currentSession][i].name=item[0];save();initWorkout()}};row.append(info,use);panel.append(row)});box.append(panel);altBtn.textContent='Ocultar alternativas'};box.append(altBtn);
-  const labels=document.createElement('div');labels.className='setline small';labels.innerHTML='<span>Série</span><span style="text-align:center">Kg</span><span style="text-align:center">Reps</span><span style="text-align:center">RIR</span><span></span>';box.append(labels);
-  workout[i].sets.forEach((s,j)=>{
+  if(!workout[i])workout[i]={sets:Array.from({length:ex.sets||3},()=>({weight:'',reps:'',rir:'2',done:false}))};
+  const sets=workout[i].sets, completed=sets.filter(s=>s.done).length, expanded=i===openExerciseIndex;
+  const box=document.createElement('article');box.className='exercise exercise-accordion'+(sets.length&&sets.every(s=>s.done)?' done':'')+(expanded?' is-expanded':'');
+  const head=document.createElement('div');head.className='exercise-heading';
+  const toggle=document.createElement('button');toggle.type='button';toggle.className='exercise-expand';toggle.setAttribute('aria-expanded',String(expanded));toggle.setAttribute('aria-controls','exercise-body-'+i);
+  const titleWrap=document.createElement('span');titleWrap.className='exercise-title-wrap';
+  const title=document.createElement('strong');title.className='exercise-title';title.textContent=(i+1)+'. '+ex.name;
+  const summary=document.createElement('span');summary.className='exercise-summary';
+  const lastEntered=[...sets].reverse().find(s=>s.weight!==''||s.reps!=='');
+  const summaryLine=lastEntered?`${lastEntered.weight!==''?lastEntered.weight+' kg':'— kg'} × ${lastEntered.reps!==''?lastEntered.reps+' reps':'— reps'}`:`${sets.length} séries planejadas`;
+  summary.textContent=`${sets.length} séries · ${completed}/${sets.length} concluídas · ${summaryLine}`;
+  const chevron=document.createElement('span');chevron.className='exercise-chevron';chevron.textContent='⌄';
+  titleWrap.append(title,summary);toggle.append(titleWrap,chevron);
+  toggle.onclick=()=>{openExerciseIndex=expanded?-1:i;renderWorkout()};
+  const done=document.createElement('button');done.type='button';done.className='iconbtn donebtn';done.textContent=sets.every(s=>s.done)?'✓ Feito':'Marcar feito';done.setAttribute('aria-label',sets.every(s=>s.done)?'Desmarcar todas as séries':'Marcar todas as séries como feitas');done.onclick=()=>{const val=!sets.every(s=>s.done);sets.forEach(s=>s.done=val);renderWorkout()};
+  head.append(toggle,done);box.append(head);
+  const bodyWrap=document.createElement('div');bodyWrap.className='exercise-body-wrap';bodyWrap.id='exercise-body-'+i;bodyWrap.setAttribute('aria-hidden',String(!expanded));bodyWrap.inert=!expanded;
+  const body=document.createElement('div');body.className='exercise-body';
+  const altBtn=document.createElement('button');altBtn.type='button';altBtn.className='secondary alt-toggle';altBtn.textContent='↔ Alternativas para este exercício';altBtn.onclick=()=>{const old=body.querySelector('.alternatives');if(old){old.remove();altBtn.textContent='↔ Alternativas para este exercício';return}const panel=document.createElement('div');panel.className='alternatives';const note=document.createElement('p');note.className='small';note.textContent='Sugestões por semelhança de movimento ou músculos trabalhados. A equivalência não é perfeita; escolha apenas exercícios que saiba executar com segurança.';panel.append(note);const items=getAlternatives(ex.name);if(!items.length){const p=document.createElement('p');p.textContent='Ainda não há sugestões automáticas para este exercício.';panel.append(p)}items.forEach(item=>{const row=document.createElement('div');row.className='alternative';const info=document.createElement('div');const strong=document.createElement('strong');strong.textContent=item[0];const small=document.createElement('small');small.textContent=item[1];info.append(strong,small);const use=document.createElement('button');use.className='secondary';use.textContent='Usar';use.onclick=()=>{if(confirm('Trocar '+ex.name+' por '+item[0]+' nesta ficha?')){data.profiles[currentProfile].plans[currentSession][i].name=item[0];save();initWorkout()}};row.append(info,use);panel.append(row)});body.append(panel);altBtn.textContent='Ocultar alternativas'};body.append(altBtn);
+  const labels=document.createElement('div');labels.className='setline small';labels.innerHTML='<span>Série</span><span style="text-align:center">Kg</span><span style="text-align:center">Reps</span><span style="text-align:center">RIR</span><span></span>';body.append(labels);
+  sets.forEach((s,j)=>{
    const row=document.createElement('div');row.className='setline';
    const num=document.createElement('span');num.className='setnum';num.textContent=j+1;
-   function field(key,placeholder,type='text'){const input=document.createElement('input');input.value=s[key];input.placeholder=placeholder;input.setAttribute('aria-label',placeholder);if(type==='number'){input.type='number';input.min='0';input.step='any'}input.onchange=()=>{s[key]=input.value;save()};return input}
+   function field(key,placeholder,type='text'){const input=document.createElement('input');input.value=s[key];input.placeholder=placeholder;input.setAttribute('aria-label',`${ex.name}, série ${j+1}, ${placeholder}`);if(type==='number'){input.type='number';input.min='0';input.step='any'}input.onchange=()=>{s[key]=input.value;save();const active=document.activeElement;const pos=active&&active.selectionStart;renderWorkout();const matching=[...document.querySelectorAll(`#exercise-body-${i} input`)].find(el=>el.getAttribute('aria-label')===`${ex.name}, série ${j+1}, ${placeholder}`);if(matching){matching.focus();if(pos!==null&&matching.setSelectionRange)try{matching.setSelectionRange(pos,pos)}catch(e){}}};return input}
    const w=field('weight','kg','number'),r=field('reps','reps','number'),rir=field('rir','2','number');
-   const check=document.createElement('button');check.className='iconbtn';check.textContent=s.done?'✓':'○';check.onclick=()=>{s.done=!s.done;renderWorkout()};
-   row.append(num,w,r,rir,check);box.append(row);
+   const check=document.createElement('button');check.type='button';check.className='iconbtn set-check';check.textContent=s.done?'✓':'○';check.setAttribute('aria-label',s.done?`Desmarcar série ${j+1}`:`Concluir série ${j+1}`);check.onclick=()=>{s.done=!s.done;renderWorkout()};
+   row.append(num,w,r,rir,check);body.append(row);
   });
-  const foot=document.createElement('div');foot.className='row topgap';
-  const add=document.createElement('button');add.className='secondary';add.textContent='+ Série';add.onclick=()=>{workout[i].sets.push({weight:'',reps:'',rir:'2',done:false});renderWorkout()};
-  const remove=document.createElement('button');remove.className='secondary';remove.textContent='Remover exercício';remove.onclick=()=>{if(confirm('Remover este exercício do plano?')){data.profiles[currentProfile].plans[currentSession].splice(i,1);delete workout[i];save();initWorkout()}};
-  foot.append(add,remove);box.append(foot);list.append(box);
+  const foot=document.createElement('div');foot.className='row topgap exercise-actions';
+  const add=document.createElement('button');add.className='secondary';add.textContent='+ Série';add.onclick=()=>{sets.push({weight:'',reps:'',rir:'2',done:false});openExerciseIndex=i;renderWorkout()};
+  const remove=document.createElement('button');remove.className='secondary';remove.textContent='Remover exercício';remove.onclick=()=>{if(confirm('Remover este exercício do plano?')){data.profiles[currentProfile].plans[currentSession].splice(i,1);delete workout[i];openExerciseIndex=Math.max(0,Math.min(i,plan().length-2));save();initWorkout()}};
+  foot.append(add,remove);body.append(foot);bodyWrap.append(body);box.append(bodyWrap);list.append(box);
  });
 }
 function renderHistory(){
@@ -319,7 +365,7 @@ function renderHome(){
  if(!latest.length){recent.innerHTML='<div class="recent-empty"><strong>Teu histórico começa aqui.</strong>Conclua um treino para ver suas atividades recentes e acompanhar a frequência por aqui.</div>';return}
  latest.forEach(h=>{const row=document.createElement('div');row.className='recent-row';const ico=document.createElement('div');ico.className='recent-date-icon';ico.textContent='↗';const info=document.createElement('div');info.className='recent-row-info';const title=document.createElement('strong');title.textContent=h.sessionName||planName(h.session);const meta=document.createElement('span');meta.textContent=h.date||'Treino registrado';info.append(title,meta);const count=document.createElement('span');count.className='recent-row-count';count.textContent=`${(h.exercises||[]).length} exercícios`;row.append(ico,info,count);recent.append(row)});
 }
-function switchTab(tab){if(tab==='settings')returnExerciseEditorHome();document.querySelectorAll('[id^="tab-"]').forEach(el=>el.classList.add('hidden'));const target=document.getElementById('tab-'+tab);if(target)target.classList.remove('hidden');document.querySelectorAll('.bottom-nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));if(tab==='history')renderHistory();if(tab==='home')renderHome();window.scrollTo({top:0,behavior:'smooth'})}
+function switchTab(tab){if(tab==='settings')returnExerciseEditorHome();const current=document.querySelector('[id^="tab-"]:not(.hidden)');document.querySelectorAll('[id^="tab-"]').forEach(el=>{el.classList.add('hidden');el.classList.remove('screen-enter')});const target=document.getElementById('tab-'+tab);if(target){target.classList.remove('hidden');void target.offsetWidth;target.classList.add('screen-enter')}document.querySelectorAll('.bottom-nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));if(tab==='history')renderHistory();if(tab==='home')renderHome();window.scrollTo({top:0,behavior:'smooth'})}
 function finishWorkout(){const ex=plan().map((e,i)=>({name:e.name,sets:(workout[i]?.sets||[]).map(s=>({...s}))}));data.history.push({date:new Date().toLocaleString('pt-BR'),profile:currentProfile,session:currentSession,sessionName:planName(),exercises:ex});const p=data.profiles[currentProfile],order=p.planOrder.filter(k=>p.plans[k]);p.next=order[(Math.max(0,order.indexOf(currentSession))+1)%order.length]||currentSession;save();currentSession=p.next;initWorkout();alert('Treino salvo! Próximo treino: '+planName());switchTab('history')}
 document.querySelectorAll('.bottom-nav-btn').forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));
 document.getElementById('homeStartWorkout').onclick=()=>switchTab('workout');
