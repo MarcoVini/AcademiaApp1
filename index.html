@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#111318">
+  <meta name="description" content="Seu diário de treino pessoal, com histórico local e suporte offline.">
+  <link rel="manifest" href="./manifest.json">
+  <title>Treino — Diário pessoal</title>
+  <style>
+    :root{color-scheme:dark;--bg:#0d0f13;--panel:#171a21;--panel2:#20242d;--line:#2c313d;--text:#f3f5f8;--muted:#a4adbd;--accent:#b7f36b;--danger:#ff7979}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+    button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:12px;padding:11px 14px;background:var(--accent);color:#10130b;font-weight:750}
+    button.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line)}button.danger{background:#3a2024;color:#ffdfe1;border:1px solid #633239}
+    input,select,textarea{width:100%;background:#0e1116;color:var(--text);border:1px solid var(--line);border-radius:10px;padding:10px;min-width:0}
+    label{display:block;color:var(--muted);font-size:12px;margin-bottom:5px}.wrap{max-width:760px;margin:auto;padding:16px 14px 100px}
+    header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:8px 0 18px}h1{font-size:25px;margin:0;letter-spacing:-.6px}h2{font-size:18px;margin:0 0 12px}p{margin:6px 0;color:var(--muted)}.pill{font-size:12px;color:var(--accent);border:1px solid #43532d;border-radius:999px;padding:5px 9px}
+    .card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:15px;margin:12px 0}.row{display:flex;gap:10px;align-items:center}.row>*{flex:1}.between{justify-content:space-between}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.small{font-size:12px;color:var(--muted)}.tabs{display:flex;gap:8px;overflow:auto;margin-bottom:14px}.tabs button{white-space:nowrap}.tabs button.active{background:var(--accent);color:#10130b}.exercise{border:1px solid var(--line);border-radius:15px;padding:13px;margin:10px 0;background:#12151b}.exercise h3{margin:0 0 10px;font-size:16px}.fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.setline{display:grid;grid-template-columns:42px 1fr 1fr 1fr 36px;gap:6px;align-items:center;margin:7px 0}.setline input{padding:8px 5px;text-align:center}.setnum{color:var(--muted);text-align:center;font-size:13px}.iconbtn{padding:8px;background:var(--panel2);color:var(--text);border:1px solid var(--line)}.done{outline:2px solid #8bc34a}.done .donebtn{background:#2b3a20;color:#d9ffb2}.footerbar{position:fixed;bottom:0;left:0;right:0;background:#101217ee;backdrop-filter:blur(14px);border-top:1px solid var(--line);padding:10px max(14px,env(safe-area-inset-right)) calc(10px + env(safe-area-inset-bottom));display:flex;gap:8px;justify-content:center}.footerbar button{max-width:240px;flex:1}.hidden{display:none!important}.historyitem{padding:12px 0;border-bottom:1px solid var(--line)}.notice{background:#222b1b;border:1px solid #43532d;border-radius:12px;padding:11px;color:#dfffc2;font-size:13px}.timer{font-size:38px;font-weight:800;text-align:center;letter-spacing:1px;margin:10px}.empty{text-align:center;padding:24px 10px;color:var(--muted)}.topgap{margin-top:18px}
+    @media(max-width:420px){.wrap{padding:12px 10px 100px}.card{padding:12px}.setline{grid-template-columns:28px 1fr 1fr 1fr 32px;gap:4px}.setline input{font-size:14px}.fields{gap:6px}h1{font-size:22px}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div><h1>Treino<span style="color:var(--accent)">.</span></h1><p>Seu diário de academia</p></div>
+    <span class="pill" id="saveStatus">Salvo no aparelho</span>
+  </header>
+
+  <div class="card">
+    <div class="row">
+      <div><label for="profile">Perfil</label><select id="profile"><option value="vini">Meu treino</option><option value="parceiro">Segundo perfil</option></select></div>
+      <div><label for="session">Treino atual</label><select id="session"><option value="A">Full Body A</option><option value="B">Full Body B</option></select></div>
+    </div>
+    <p class="small">Alterna A/B a cada sessão concluída. Edite os exercícios para combinar com sua ficha real.</p>
+  </div>
+
+  <div class="tabs">
+    <button class="active" data-tab="workout">Treino</button>
+    <button class="secondary" data-tab="history">Histórico</button>
+    <button class="secondary" data-tab="settings">Ajustes e backup</button>
+  </div>
+
+  <section id="tab-workout">
+    <div class="row between">
+      <div><h2 id="workoutTitle">Full Body A</h2><p id="workoutSubtitle">Registre carga, reps e RIR.</p></div>
+      <button class="secondary" id="timerOpen">⏱ Descanso</button>
+    </div>
+    <div id="exerciseList"></div>
+    <div class="row topgap">
+      <button class="secondary" id="addExercise">+ Exercício</button>
+      <button id="finishWorkout">Concluir treino ✓</button>
+    </div>
+    <p class="small">RIR = repetições em reserva: quantas reps você ainda conseguiria fazer ao terminar a série.</p>
+  </section>
+
+  <section id="tab-history" class="hidden">
+    <h2>Histórico de treinos</h2>
+    <div id="historyList"></div>
+  </section>
+
+  <section id="tab-settings" class="hidden">
+    <h2>Ajustes e backup</h2>
+    <div class="card">
+      <h2>Adicionar ou editar exercício</h2>
+      <p>Escolha um treino, informe o nome e quantas séries quer acompanhar.</p>
+      <div class="row"><div><label for="editSession">Treino</label><select id="editSession"><option value="A">Full Body A</option><option value="B">Full Body B</option></select></div><div><label for="exerciseName">Nome do exercício</label><input id="exerciseName" placeholder="Ex.: Supino máquina"></div></div>
+      <div class="row topgap"><div><label for="exerciseSets">Número de séries</label><select id="exerciseSets"><option>2</option><option selected>3</option><option>4</option><option>5</option><option>6</option></select></div><div style="display:flex;align-items:end"><button id="saveExercise" style="width:100%">Salvar exercício</button></div></div>
+    </div>
+    <div class="card">
+      <h2>Dados e privacidade</h2>
+      <p>Os registros ficam neste navegador e neste aparelho. Não há conta nem servidor. Exporte um backup regularmente para não perder seu histórico.</p>
+      <div class="row topgap"><button class="secondary" id="exportData">Exportar backup</button><button class="secondary" id="importButton">Importar backup</button><input class="hidden" type="file" id="importFile" accept="application/json"></div>
+      <div class="row topgap"><button class="danger" id="clearData">Apagar todos os dados</button></div>
+    </div>
+    <div class="notice">Dica: para instalar como PWA e usar offline, o projeto precisa estar hospedado em HTTPS. O arquivo ZIP inclui instruções para publicar gratuitamente no GitHub Pages.</div>
+  </section>
+</div>
+
+<div class="footerbar"><button class="secondary" id="quickTimer">Iniciar descanso · 90s</button><button id="quickFinish">Concluir treino</button></div>
+
+<div id="timerModal" class="hidden" style="position:fixed;inset:0;background:#000b;display:grid;place-items:center;padding:20px">
+  <div class="card" style="width:min(420px,100%);margin:0">
+    <div class="row between"><h2>Descanso</h2><button class="secondary" id="timerClose">Fechar</button></div>
+    <div class="timer" id="timerDisplay">01:30</div>
+    <div class="row"><button class="secondary" data-seconds="60">60 s</button><button data-seconds="90">90 s</button><button class="secondary" data-seconds="120">120 s</button></div>
+    <div class="row topgap"><button class="secondary" id="timerPause">Pausar</button><button id="timerReset">Reiniciar</button></div>
+  </div>
+</div>
+<script>
+const KEY='treino-pwa-v1';
+const defaults={
+  profiles:{
+    vini:{next:'A',plans:{
+      A:[{name:'Supino máquina',sets:3},{name:'Puxada',sets:3},{name:'Leg press',sets:3},{name:'Elevação lateral',sets:3},{name:'Flexora',sets:3},{name:'Tríceps',sets:3},{name:'Abdominal',sets:3}],
+      B:[{name:'Supino inclinado',sets:3},{name:'Remada',sets:3},{name:'Agachamento ou leg press',sets:3},{name:'Desenvolvimento',sets:3},{name:'Mesa flexora',sets:3},{name:'Rosca bíceps',sets:3},{name:'Panturrilha',sets:3}]
+    }},
+    parceiro:{next:'A',plans:{A:[{name:'Adicionar exercício',sets:3}],B:[{name:'Adicionar exercício',sets:3}]}}
+  }, history:[]
+};
+let data=load(), currentProfile='vini', currentSession='A', workout={}, timerSeconds=90, timerRemaining=90, timerInterval=null, timerRunning=false, editIndex=null;
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||structuredClone(defaults)}catch(e){return JSON.parse(JSON.stringify(defaults))}}
+function save(){localStorage.setItem(KEY,JSON.stringify(data));document.getElementById('saveStatus').textContent='Salvo ✓'}
+function plan(){return data.profiles[currentProfile].plans[currentSession]}
+function initWorkout(){workout={};plan().forEach((ex,i)=>{workout[i]={sets:Array.from({length:ex.sets},()=>({weight:'',reps:'',rir:'2',done:false}))}});renderWorkout()}
+function renderWorkout(){
+ document.getElementById('workoutTitle').textContent='Full Body '+currentSession;
+ document.getElementById('session').value=currentSession;
+ document.getElementById('profile').value=currentProfile;
+ const list=document.getElementById('exerciseList');list.innerHTML='';
+ plan().forEach((ex,i)=>{
+  if(!workout[i])workout[i]={sets:Array.from({length:ex.sets},()=>({weight:'',reps:'',rir:'2',done:false}))};
+  const box=document.createElement('div');box.className='exercise'+(workout[i].sets.every(s=>s.done)?' done':'');
+  const head=document.createElement('div');head.className='row between';
+  const title=document.createElement('h3');title.textContent=(i+1)+'. '+ex.name;
+  const done=document.createElement('button');done.className='iconbtn donebtn';done.textContent=workout[i].sets.every(s=>s.done)?'✓ Feito':'Marcar feito';done.onclick=()=>{const val=!workout[i].sets.every(s=>s.done);workout[i].sets.forEach(s=>s.done=val);renderWorkout()};
+  head.append(title,done);box.append(head);
+  const labels=document.createElement('div');labels.className='setline small';labels.innerHTML='<span>Série</span><span style="text-align:center">Kg</span><span style="text-align:center">Reps</span><span style="text-align:center">RIR</span><span></span>';box.append(labels);
+  workout[i].sets.forEach((s,j)=>{
+   const row=document.createElement('div');row.className='setline';
+   const num=document.createElement('span');num.className='setnum';num.textContent=j+1;
+   function field(key,placeholder,type='text'){const input=document.createElement('input');input.value=s[key];input.placeholder=placeholder;input.setAttribute('aria-label',placeholder);if(type==='number'){input.type='number';input.min='0';input.step='any'}input.onchange=()=>{s[key]=input.value;save()};return input}
+   const w=field('weight','kg','number'),r=field('reps','reps','number'),rir=field('rir','2','number');
+   const check=document.createElement('button');check.className='iconbtn';check.textContent=s.done?'✓':'○';check.onclick=()=>{s.done=!s.done;renderWorkout()};
+   row.append(num,w,r,rir,check);box.append(row);
+  });
+  const foot=document.createElement('div');foot.className='row topgap';
+  const add=document.createElement('button');add.className='secondary';add.textContent='+ Série';add.onclick=()=>{workout[i].sets.push({weight:'',reps:'',rir:'2',done:false});renderWorkout()};
+  const remove=document.createElement('button');remove.className='secondary';remove.textContent='Remover exercício';remove.onclick=()=>{if(confirm('Remover este exercício do plano?')){data.profiles[currentProfile].plans[currentSession].splice(i,1);delete workout[i];save();initWorkout()}};
+  foot.append(add,remove);box.append(foot);list.append(box);
+ });
+}
+function renderHistory(){const el=document.getElementById('historyList');el.innerHTML='';const rows=data.history.filter(h=>h.profile===currentProfile);if(!rows.length){el.innerHTML='<div class="empty">Ainda não há treinos salvos. Conclua seu primeiro treino para ver o histórico aqui.</div>';return}
+ rows.slice().reverse().forEach((h,idx)=>{const div=document.createElement('div');div.className='historyitem';const title=document.createElement('strong');title.textContent=`${h.date} · Full Body ${h.session}`;const summary=document.createElement('p');summary.textContent=h.exercises.map(e=>`${e.name}: ${e.sets.filter(s=>s.weight||s.reps).map(s=>`${s.weight||'—'}kg × ${s.reps||'—'} (RIR ${s.rir})`).join(', ')||'sem registro'}`).join(' | ');div.append(title,summary);el.append(div)})}
+function switchTab(tab){document.querySelectorAll('[id^="tab-"]').forEach(el=>el.classList.add('hidden'));document.getElementById('tab-'+tab).classList.remove('hidden');document.querySelectorAll('[data-tab]').forEach(b=>{b.classList.toggle('active',b.dataset.tab===tab);b.classList.toggle('secondary',b.dataset.tab!==tab)});if(tab==='history')renderHistory()}
+function finishWorkout(){const ex=plan().map((e,i)=>({name:e.name,sets:(workout[i]?.sets||[]).map(s=>({...s}))}));data.history.push({date:new Date().toLocaleString('pt-BR'),profile:currentProfile,session:currentSession,exercises:ex});data.profiles[currentProfile].next=currentSession==='A'?'B':'A';save();currentSession=data.profiles[currentProfile].next;initWorkout();alert('Treino salvo! Próximo treino: Full Body '+currentSession);switchTab('history')}
+document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));
+document.getElementById('profile').onchange=e=>{currentProfile=e.target.value;currentSession=data.profiles[currentProfile].next;initWorkout()};
+document.getElementById('session').onchange=e=>{currentSession=e.target.value;initWorkout()};
+document.getElementById('finishWorkout').onclick=finishWorkout;document.getElementById('quickFinish').onclick=finishWorkout;
+document.getElementById('addExercise').onclick=()=>{switchTab('settings');document.getElementById('editSession').value=currentSession;document.getElementById('exerciseName').focus()};
+document.getElementById('saveExercise').onclick=()=>{const name=document.getElementById('exerciseName').value.trim();const sess=document.getElementById('editSession').value;const sets=Number(document.getElementById('exerciseSets').value);if(!name){alert('Digite o nome do exercício.');return}data.profiles[currentProfile].plans[sess].push({name,sets});save();document.getElementById('exerciseName').value='';if(sess===currentSession)initWorkout();alert('Exercício adicionado!')};
+document.getElementById('exportData').onclick=()=>{const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='backup-treino.json';a.click();URL.revokeObjectURL(a.href)};
+document.getElementById('importButton').onclick=()=>document.getElementById('importFile').click();
+document.getElementById('importFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const imported=JSON.parse(await f.text());if(!imported.profiles||!imported.history)throw new Error('Arquivo inválido');data=imported;save();currentSession=data.profiles[currentProfile].next||'A';initWorkout();renderHistory();alert('Backup importado!')}catch(err){alert('Não consegui importar esse arquivo. Confira se é um backup válido.')}e.target.value=''};
+document.getElementById('clearData').onclick=()=>{if(confirm('Apagar todos os treinos e configurações deste navegador? Exporte um backup antes, se quiser guardar os dados.')){data=JSON.parse(JSON.stringify(defaults));save();currentProfile='vini';currentSession='A';initWorkout();renderHistory();alert('Dados apagados.')}};
+const modal=document.getElementById('timerModal');
+function openTimer(){modal.classList.remove('hidden');modal.style.display='grid';updateTimerDisplay()}
+function closeTimer(){modal.classList.add('hidden');modal.style.display='none'}
+function updateTimerDisplay(){const m=Math.floor(timerRemaining/60),s=timerRemaining%60;document.getElementById('timerDisplay').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0')}
+function startTimer(sec=timerSeconds){clearInterval(timerInterval);timerSeconds=sec;timerRemaining=sec;timerRunning=true;updateTimerDisplay();timerInterval=setInterval(()=>{if(!timerRunning)return;if(timerRemaining>0){timerRemaining--;updateTimerDisplay()}else{clearInterval(timerInterval);timerRunning=false;document.getElementById('timerDisplay').textContent='00:00';if(navigator.vibrate)navigator.vibrate([200,100,200]);alert('Descanso finalizado! Bora pra próxima série 💪')}},1000);openTimer()}
+document.getElementById('timerOpen').onclick=openTimer;document.getElementById('quickTimer').onclick=()=>startTimer(90);document.getElementById('timerClose').onclick=closeTimer;
+document.querySelectorAll('[data-seconds]').forEach(b=>b.onclick=()=>startTimer(Number(b.dataset.seconds)));
+document.getElementById('timerPause').onclick=()=>{timerRunning=!timerRunning;document.getElementById('timerPause').textContent=timerRunning?'Pausar':'Continuar'};
+document.getElementById('timerReset').onclick=()=>startTimer(timerSeconds);
+if('serviceWorker' in navigator && location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
+initWorkout();
+</script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+# Treino — PWA pessoal
+
+Primeira versão de um diário de treino para celular. Feito em HTML, CSS e JavaScript, sem dependências ou backend.
+
+## O que já tem
+- Dois perfis locais
+- Treinos Full Body A/B, com alternância automática após concluir a sessão
+- Registro de carga, repetições e RIR por série
+- Adicionar séries e exercícios
+- Cronômetro de descanso de 60, 90 e 120 segundos
+- Histórico de treinos
+- Exportar/importar backup JSON
+- Armazenamento local e cache básico para uso offline
+
+## Como testar
+Abra `index.html` no navegador para testar as funções básicas. O modo PWA instalável/offline exige hospedar os arquivos em HTTPS (por exemplo, GitHub Pages).
+
+## Publicar gratuitamente no GitHub Pages
+1. Entre em https://github.com e crie um repositório público chamado `treino-pwa`.
+2. Envie os arquivos `index.html`, `manifest.json` e `sw.js` para a raiz do repositório.
+3. Vá a Settings → Pages.
+4. Em Build and deployment, escolha Deploy from a branch; selecione `main` e `/ (root)`; salve.
+5. Aguarde a URL publicada. No Android, abra a URL no Chrome → menu ⋮ → “Adicionar à tela inicial” ou “Instalar app”.
+
+## Importante
+- Os dados ficam no armazenamento do navegador, no próprio aparelho. Limpar os dados do site pode apagar o histórico.
+- Exporte backups periodicamente. O backup inclui os dois perfis e o histórico.
+- O treino inicial é ilustrativo; ajuste os exercícios à sua ficha real.
+- Este protótipo não sincroniza dados entre aparelhos.
