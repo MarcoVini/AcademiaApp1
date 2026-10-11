@@ -213,7 +213,28 @@ document.getElementById('timerOpen').onclick=openTimer;document.getElementById('
 document.querySelectorAll('[data-seconds]').forEach(b=>b.onclick=()=>startTimer(Number(b.dataset.seconds)));
 document.getElementById('timerPause').onclick=()=>{timerRunning=!timerRunning;document.getElementById('timerPause').textContent=timerRunning?'Pausar':'Continuar'};
 document.getElementById('timerReset').onclick=()=>startTimer(timerSeconds);
-if('serviceWorker' in navigator && location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+  window.addEventListener('load', async () => {
+    try {
+      const registration = await navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' });
+      // Verifica atualizações ao abrir o app e quando o usuário volta para ele.
+      registration.update().catch(() => {});
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') registration.update().catch(() => {});
+      });
+      // Se uma nova versão assumir o controle, recarrega uma única vez.
+      let refreshing = false;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (!refreshing) {
+          refreshing = true;
+          window.location.reload();
+        }
+      });
+    } catch (error) {
+      console.warn('Não foi possível atualizar o app offline:', error);
+    }
+  });
+}
 initWorkout();
 </script>
 </body>

@@ -27,3 +27,7 @@ Abra `index.html` no navegador para testar as funções básicas. O modo PWA ins
 - Exporte backups periodicamente. O backup inclui os dois perfis e o histórico.
 - O treino inicial é ilustrativo; ajuste os exercícios à sua ficha real.
 - Este protótipo não sincroniza dados entre aparelhos.
+
+
+## Atualização automática
+O service worker foi atualizado para a versão `treino-pwa-v2`. Depois de publicar os arquivos na raiz do GitHub Pages, o app verifica atualizações ao abrir e quando volta para primeiro plano. Páginas HTML priorizam a versão online e usam o cache se estiver sem conexão. O histórico de treinos continua salvo no `localStorage` do navegador.
