@@ -40,3 +40,7 @@ O service worker foi atualizado para a versão `treino-pwa-v2`. Depois de public
 - A substituição altera o exercício na ficha, mantendo a quantidade de séries.
 - Dados antigos em localStorage são migrados na leitura; não apague os dados do navegador.
 - Faça backup antes de publicar.
+
+
+## Catálogo de exercícios
+O formulário de exercícios agora inclui catálogo local pesquisável, filtro por grupo muscular e opção explícita de cadastrar um nome personalizado quando não encontrar um exercício. O catálogo funciona sem internet e sem serviços externos.
