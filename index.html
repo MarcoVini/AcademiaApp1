@@ -28,7 +28,7 @@
 .historydetails{border-top:1px solid #303744;padding:4px 14px 14px}.historydetails summary{cursor:pointer;color:#c7d1df;font-size:13px;padding:10px 0;user-select:none}
 .historyexercise{padding:10px 0;border-top:1px solid #2b323d}.historyexercise:first-of-type{border-top:0}.historyexercise strong{display:block;font-size:14px;margin-bottom:6px}
 .setchips{display:flex;flex-wrap:wrap;gap:6px}.setchip{font-size:12px;padding:6px 8px;background:#0f1319;border:1px solid #2c3542;border-radius:8px;color:#d5deea}.setchip b{color:var(--accent);font-weight:750}
-.historyempty{border:1px dashed #3a4554;border-radius:16px;padding:28px 18px;text-align:center;color:var(--muted)}.historyempty .emoji{font-size:30px;margin-bottom:8px}
+.alt-toggle{margin-top:10px;width:100%;text-align:left}.alternatives{margin-top:10px;padding:12px;background:#0f1319;border:1px solid #364151;border-radius:12px}.alternative{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 0;border-bottom:1px solid #29313d}.alternative:last-child{border-bottom:0}.historyempty{border:1px dashed #3a4554;border-radius:16px;padding:28px 18px;text-align:center;color:var(--muted)}.historyempty .emoji{font-size:30px;margin-bottom:8px}
 @media(max-width:420px){.historystats{gap:6px}.statbox{padding:10px}.statbox strong{font-size:19px}.historyhead{padding:12px}.historytitle{font-size:16px}.historyactions{flex-direction:column}}.notice{background:#222b1b;border:1px solid #43532d;border-radius:12px;padding:11px;color:#dfffc2;font-size:13px}.timer{font-size:38px;font-weight:800;text-align:center;letter-spacing:1px;margin:10px}.empty{text-align:center;padding:24px 10px;color:var(--muted)}.topgap{margin-top:18px}
     @media(max-width:420px){.wrap{padding:12px 10px 100px}.card{padding:12px}.setline{grid-template-columns:28px 1fr 1fr 1fr 32px;gap:4px}.setline input{font-size:14px}.fields{gap:6px}h1{font-size:22px}}
   </style>
@@ -43,9 +43,9 @@
   <div class="card">
     <div class="row">
       <div><label for="profile">Perfil</label><select id="profile"><option value="vini">Meu treino</option><option value="parceiro">Segundo perfil</option></select></div>
-      <div><label for="session">Treino atual</label><select id="session"><option value="A">Full Body A</option><option value="B">Full Body B</option></select></div>
+      <div><label for="session">Treino atual</label><select id="session"></select></div>
     </div>
-    <p class="small">Alterna A/B a cada sessão concluída. Edite os exercícios para combinar com sua ficha real.</p>
+    <p class="small">Crie suas próprias fichas e encontre alternativas quando um aparelho estiver ocupado.</p>
   </div>
 
   <div class="tabs">
@@ -79,9 +79,13 @@
   <section id="tab-settings" class="hidden">
     <h2>Ajustes e backup</h2>
     <div class="card">
-      <h2>Adicionar ou editar exercício</h2>
+      <h2>Minhas fichas e exercícios</h2>
+      <p>Crie divisões personalizadas, além dos treinos A e B.</p>
+      <div class="row"><div><label for="newPlanName">Nome da nova ficha</label><input id="newPlanName" placeholder="Ex.: Peito e tríceps"></div><div style="display:flex;align-items:end"><button id="createPlan" style="width:100%">Criar ficha</button></div></div>
+      <hr style="border:0;border-top:1px solid var(--border);margin:18px 0">
+      <h2>Adicionar exercício à ficha</h2>
       <p>Escolha um treino, informe o nome e quantas séries quer acompanhar.</p>
-      <div class="row"><div><label for="editSession">Treino</label><select id="editSession"><option value="A">Full Body A</option><option value="B">Full Body B</option></select></div><div><label for="exerciseName">Nome do exercício</label><input id="exerciseName" placeholder="Ex.: Supino máquina"></div></div>
+      <div class="row"><div><label for="editSession">Ficha</label><select id="editSession"></select></div><div><label for="exerciseName">Nome do exercício</label><input id="exerciseName" placeholder="Ex.: Supino máquina"></div></div>
       <div class="row topgap"><div><label for="exerciseSets">Número de séries</label><select id="exerciseSets"><option>2</option><option selected>3</option><option>4</option><option>5</option><option>6</option></select></div><div style="display:flex;align-items:end"><button id="saveExercise" style="width:100%">Salvar exercício</button></div></div>
     </div>
     <div class="card">
@@ -116,22 +120,35 @@ const defaults={
   }, history:[]
 };
 let data=load(), currentProfile='vini', currentSession='A', workout={}, timerSeconds=90, timerRemaining=90, timerInterval=null, timerRunning=false, editIndex=null;
-function load(){try{return JSON.parse(localStorage.getItem(KEY))||structuredClone(defaults)}catch(e){return JSON.parse(JSON.stringify(defaults))}}
+function load(){try{const d=JSON.parse(localStorage.getItem(KEY))||JSON.parse(JSON.stringify(defaults));Object.keys(d.profiles||{}).forEach(id=>{const p=d.profiles[id];p.planNames=p.planNames||{A:'Full Body A',B:'Full Body B'};p.planOrder=Array.isArray(p.planOrder)?p.planOrder:Object.keys(p.plans||{});Object.keys(p.plans||{}).forEach(k=>{if(!p.planNames[k])p.planNames[k]=(k==='A'||k==='B')?'Full Body '+k:'Treino personalizado';if(!p.planOrder.includes(k))p.planOrder.push(k)});if(!p.plans[p.next])p.next=p.planOrder[0]||'A'});return d}catch(e){const d=JSON.parse(JSON.stringify(defaults));Object.values(d.profiles).forEach(p=>{p.planNames={A:'Full Body A',B:'Full Body B'};p.planOrder=['A','B']});return d}}
 function save(){localStorage.setItem(KEY,JSON.stringify(data));document.getElementById('saveStatus').textContent='Salvo ✓'}
-function plan(){return data.profiles[currentProfile].plans[currentSession]}
-function initWorkout(){workout={};plan().forEach((ex,i)=>{workout[i]={sets:Array.from({length:ex.sets},()=>({weight:'',reps:'',rir:'2',done:false}))}});renderWorkout()}
+function plan(){return data.profiles[currentProfile].plans[currentSession]||[]}
+function planName(id=currentSession){const p=data.profiles[currentProfile];return p.planNames?.[id]||('Treino '+id)}
+function refreshPlanSelectors(){const p=data.profiles[currentProfile];['session','editSession'].forEach(id=>{const sel=document.getElementById(id),prev=sel.value;sel.innerHTML='';p.planOrder.forEach(k=>{if(!p.plans[k])return;const o=document.createElement('option');o.value=k;o.textContent=planName(k);sel.append(o)});sel.value=p.plans[prev]?prev:(p.plans[currentSession]?currentSession:(p.planOrder[0]||'A'))})}
+function initWorkout(){refreshPlanSelectors();workout={};plan().forEach((ex,i)=>{workout[i]={sets:Array.from({length:ex.sets||3},()=>({weight:'',reps:'',rir:'2',done:false}))}});renderWorkout()}
+function getAlternatives(name){const n=name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');const groups=[
+{keys:['supino','peck deck','crucifixo','voador','chest press'],items:[['Supino com halteres','Empurrar horizontal · peito/tríceps'],['Flexão de braços','Empurrar horizontal · peso corporal'],['Crucifixo na máquina','Isolamento de peitoral']]},
+{keys:['puxada','pulldown','barra fixa'],items:[['Puxada na frente','Puxada vertical · dorsais'],['Barra fixa assistida','Puxada vertical · dorsais/bíceps'],['Pulldown com braço reto','Ênfase em dorsais']]},
+{keys:['remada'],items:[['Remada baixa','Puxada horizontal · costas'],['Remada com halteres','Puxada horizontal · costas'],['Remada apoiada no peito','Puxada horizontal · costas']]},
+{keys:['leg press','agachamento','hack','extensora','quadriceps'],items:[['Leg press','Quadríceps e glúteos'],['Agachamento goblet','Padrão de agachamento'],['Cadeira extensora','Isolamento de quadríceps']]},
+{keys:['flexora','stiff','romeno','posterior','terra'],items:[['Mesa flexora','Flexão de joelho · posteriores'],['Stiff com halteres','Extensão de quadril · posteriores/glúteos'],['Flexora sentada','Flexão de joelho · posteriores']]},
+{keys:['elevacao lateral','desenvolvimento','ombro'],items:[['Elevação lateral com halteres','Deltoide lateral'],['Elevação lateral na polia','Deltoide lateral'],['Desenvolvimento com halteres','Ombros/tríceps']]},
+{keys:['triceps','pulley','corda'],items:[['Tríceps na polia com corda','Extensão de cotovelo'],['Tríceps francês','Extensão de cotovelo'],['Mergulho assistido','Tríceps · multiarticular']]},
+{keys:['rosca','biceps'],items:[['Rosca direta','Flexão de cotovelo · bíceps'],['Rosca martelo','Bíceps/braquial'],['Rosca inclinada com halteres','Flexão de cotovelo · bíceps']]},
+{keys:['panturrilha','gemeos'],items:[['Panturrilha em pé','Flexão plantar'],['Panturrilha sentada','Ênfase no sóleo'],['Panturrilha no leg press','Flexão plantar']]},
+{keys:['abdominal','prancha','core'],items:[['Crunch no solo','Flexão do tronco'],['Prancha','Estabilidade do tronco'],['Elevação de joelhos','Controle do tronco/pelve']]}];const g=groups.find(g=>g.keys.some(k=>n.includes(k.normalize('NFD').replace(/[\u0300-\u036f]/g,''))));return g?g.items.filter(x=>x[0].toLowerCase()!==name.toLowerCase()).slice(0,3):[]}
 function renderWorkout(){
- document.getElementById('workoutTitle').textContent='Full Body '+currentSession;
+ document.getElementById('workoutTitle').textContent=planName();
  document.getElementById('session').value=currentSession;
  document.getElementById('profile').value=currentProfile;
- const list=document.getElementById('exerciseList');list.innerHTML='';
+ const list=document.getElementById('exerciseList');list.innerHTML='';if(!plan().length){list.innerHTML='<div class="historyempty"><strong>Ficha vazia</strong><p>Abra Ajustes e backup para adicionar exercícios.</p></div>'}
  plan().forEach((ex,i)=>{
   if(!workout[i])workout[i]={sets:Array.from({length:ex.sets},()=>({weight:'',reps:'',rir:'2',done:false}))};
   const box=document.createElement('div');box.className='exercise'+(workout[i].sets.every(s=>s.done)?' done':'');
   const head=document.createElement('div');head.className='row between';
   const title=document.createElement('h3');title.textContent=(i+1)+'. '+ex.name;
   const done=document.createElement('button');done.className='iconbtn donebtn';done.textContent=workout[i].sets.every(s=>s.done)?'✓ Feito':'Marcar feito';done.onclick=()=>{const val=!workout[i].sets.every(s=>s.done);workout[i].sets.forEach(s=>s.done=val);renderWorkout()};
-  head.append(title,done);box.append(head);
+  head.append(title,done);box.append(head);const altBtn=document.createElement('button');altBtn.className='secondary alt-toggle';altBtn.textContent='↔ Alternativas para este exercício';altBtn.onclick=()=>{const old=box.querySelector('.alternatives');if(old){old.remove();altBtn.textContent='↔ Alternativas para este exercício';return}const panel=document.createElement('div');panel.className='alternatives';const note=document.createElement('p');note.className='small';note.textContent='Sugestões por semelhança de movimento ou músculos trabalhados. A equivalência não é perfeita; escolha apenas exercícios que saiba executar com segurança.';panel.append(note);const items=getAlternatives(ex.name);if(!items.length){const p=document.createElement('p');p.textContent='Ainda não há sugestões automáticas para este exercício.';panel.append(p)}items.forEach(item=>{const row=document.createElement('div');row.className='alternative';const info=document.createElement('div');const strong=document.createElement('strong');strong.textContent=item[0];const small=document.createElement('small');small.textContent=item[1];info.append(strong,small);const use=document.createElement('button');use.className='secondary';use.textContent='Usar';use.onclick=()=>{if(confirm('Trocar '+ex.name+' por '+item[0]+' nesta ficha?')){data.profiles[currentProfile].plans[currentSession][i].name=item[0];save();initWorkout()}};row.append(info,use);panel.append(row)});box.append(panel);altBtn.textContent='Ocultar alternativas'};box.append(altBtn);
   const labels=document.createElement('div');labels.className='setline small';labels.innerHTML='<span>Série</span><span style="text-align:center">Kg</span><span style="text-align:center">Reps</span><span style="text-align:center">RIR</span><span></span>';box.append(labels);
   workout[i].sets.forEach((s,j)=>{
    const row=document.createElement('div');row.className='setline';
@@ -168,7 +185,7 @@ function renderHistory(){
   const head=document.createElement('div');head.className='historyhead';
   const info=document.createElement('div');
   const date=document.createElement('div');date.className='historydate';date.textContent=h.date||'Data não informada';
-  const title=document.createElement('div');title.className='historytitle';title.textContent='Full Body '+(h.session||'?');
+  const title=document.createElement('div');title.className='historytitle';title.textContent=h.sessionName||(h.session==='A'||h.session==='B'?'Full Body '+h.session:(h.session||'Treino'));
   const chips=document.createElement('div');chips.className='historychips';
   const exerciseCount=(h.exercises||[]).length;
   const setCount=(h.exercises||[]).reduce((sum,e)=>sum+(e.sets||[]).length,0);
@@ -193,17 +210,18 @@ function renderHistory(){
  });
 }
 function switchTab(tab){document.querySelectorAll('[id^="tab-"]').forEach(el=>el.classList.add('hidden'));document.getElementById('tab-'+tab).classList.remove('hidden');document.querySelectorAll('[data-tab]').forEach(b=>{b.classList.toggle('active',b.dataset.tab===tab);b.classList.toggle('secondary',b.dataset.tab!==tab)});if(tab==='history')renderHistory()}
-function finishWorkout(){const ex=plan().map((e,i)=>({name:e.name,sets:(workout[i]?.sets||[]).map(s=>({...s}))}));data.history.push({date:new Date().toLocaleString('pt-BR'),profile:currentProfile,session:currentSession,exercises:ex});data.profiles[currentProfile].next=currentSession==='A'?'B':'A';save();currentSession=data.profiles[currentProfile].next;initWorkout();alert('Treino salvo! Próximo treino: Full Body '+currentSession);switchTab('history')}
+function finishWorkout(){const ex=plan().map((e,i)=>({name:e.name,sets:(workout[i]?.sets||[]).map(s=>({...s}))}));data.history.push({date:new Date().toLocaleString('pt-BR'),profile:currentProfile,session:currentSession,sessionName:planName(),exercises:ex});const p=data.profiles[currentProfile],order=p.planOrder.filter(k=>p.plans[k]);p.next=order[(Math.max(0,order.indexOf(currentSession))+1)%order.length]||currentSession;save();currentSession=p.next;initWorkout();alert('Treino salvo! Próximo treino: '+planName());switchTab('history')}
 document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));
 document.getElementById('profile').onchange=e=>{currentProfile=e.target.value;currentSession=data.profiles[currentProfile].next;initWorkout()};
 document.getElementById('session').onchange=e=>{currentSession=e.target.value;initWorkout()};
 document.getElementById('finishWorkout').onclick=finishWorkout;document.getElementById('quickFinish').onclick=finishWorkout;
 document.getElementById('addExercise').onclick=()=>{switchTab('settings');document.getElementById('editSession').value=currentSession;document.getElementById('exerciseName').focus()};
+document.getElementById('createPlan').onclick=()=>{const name=document.getElementById('newPlanName').value.trim();if(!name){alert('Digite um nome para a ficha.');return}const p=data.profiles[currentProfile],id='custom_'+Date.now();p.plans[id]=[];p.planNames[id]=name;p.planOrder.push(id);p.next=id;currentSession=id;document.getElementById('newPlanName').value='';save();initWorkout();switchTab('workout');alert('Ficha criada! Agora adicione exercícios em Ajustes e backup.')};
 document.getElementById('saveExercise').onclick=()=>{const name=document.getElementById('exerciseName').value.trim();const sess=document.getElementById('editSession').value;const sets=Number(document.getElementById('exerciseSets').value);if(!name){alert('Digite o nome do exercício.');return}data.profiles[currentProfile].plans[sess].push({name,sets});save();document.getElementById('exerciseName').value='';if(sess===currentSession)initWorkout();alert('Exercício adicionado!')};
 document.getElementById('exportData').onclick=()=>{const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='backup-treino.json';a.click();URL.revokeObjectURL(a.href)};
 document.getElementById('importButton').onclick=()=>document.getElementById('importFile').click();
 document.getElementById('importFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const imported=JSON.parse(await f.text());if(!imported.profiles||!imported.history)throw new Error('Arquivo inválido');data=imported;save();currentSession=data.profiles[currentProfile].next||'A';initWorkout();renderHistory();alert('Backup importado!')}catch(err){alert('Não consegui importar esse arquivo. Confira se é um backup válido.')}e.target.value=''};
-document.getElementById('clearData').onclick=()=>{if(confirm('Apagar todos os treinos e configurações deste navegador? Exporte um backup antes, se quiser guardar os dados.')){data=JSON.parse(JSON.stringify(defaults));save();currentProfile='vini';currentSession='A';initWorkout();renderHistory();alert('Dados apagados.')}};
+document.getElementById('clearData').onclick=()=>{if(confirm('Apagar todos os treinos e configurações deste navegador? Exporte um backup antes, se quiser guardar os dados.')){data=JSON.parse(JSON.stringify(defaults));Object.values(data.profiles).forEach(p=>{p.planNames={A:'Full Body A',B:'Full Body B'};p.planOrder=['A','B']});save();currentProfile='vini';currentSession='A';initWorkout();renderHistory();alert('Dados apagados.')}};
 const modal=document.getElementById('timerModal');
 function openTimer(){modal.classList.remove('hidden');modal.style.display='grid';updateTimerDisplay()}
 function closeTimer(){modal.classList.add('hidden');modal.style.display='none'}
