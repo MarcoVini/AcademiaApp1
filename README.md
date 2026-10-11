@@ -31,3 +31,12 @@ Abra `index.html` no navegador para testar as funções básicas. O modo PWA ins
 
 ## Atualização automática
 O service worker foi atualizado para a versão `treino-pwa-v2`. Depois de publicar os arquivos na raiz do GitHub Pages, o app verifica atualizações ao abrir e quando volta para primeiro plano. Páginas HTML priorizam a versão online e usam o cache se estiver sem conexão. O histórico de treinos continua salvo no `localStorage` do navegador.
+
+
+## Novidades: fichas personalizadas e alternativas
+- Crie fichas com nomes próprios, além de Full Body A/B.
+- Os treinos personalizados entram na rotação de próximos treinos.
+- Cada exercício tem um botão de alternativas com sugestões por padrão de movimento/músculos.
+- A substituição altera o exercício na ficha, mantendo a quantidade de séries.
+- Dados antigos em localStorage são migrados na leitura; não apague os dados do navegador.
+- Faça backup antes de publicar.
